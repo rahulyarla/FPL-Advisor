@@ -1,0 +1,290 @@
+{
+  "created_at": "2026-10-03T00:41:39.933460+00:00",
+  "season": "2026-27",
+  "next_gameweek": 6,
+  "deadline": "2026-10-10T10:00:00Z",
+  "completed_gameweeks": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "vaastav_current_latest_gameweek": 1,
+  "historical_seasons": [
+    {
+      "season": "2025-26",
+      "records": 29338,
+      "latest_gameweek": 38
+    },
+    {
+      "season": "2024-25",
+      "records": 26919,
+      "latest_gameweek": 38
+    },
+    {
+      "season": "2023-24",
+      "records": 28742,
+      "latest_gameweek": 38
+    }
+  ],
+  "records": 88215,
+  "live_refresh": true,
+  "warnings": [
+    "Resolved GW1 historical team for transferred player Baleba.",
+    "Resolved GW1 historical team for transferred player Danso.",
+    "Resolved GW1 historical team for transferred player Delap.",
+    "Resolved GW1 historical team for transferred player Disasi.",
+    "Resolved GW1 historical team for transferred player Enzo.",
+    "Resolved GW1 historical team for transferred player Grealish.",
+    "Resolved GW1 historical team for transferred player Iroegbunam.",
+    "Resolved GW1 historical team for transferred player Marmoush.",
+    "Resolved GW1 historical team for transferred player Martinez.",
+    "Resolved GW1 historical team for transferred player Mudryk.",
+    "Resolved GW1 historical team for transferred player Mu\u00f1oz.",
+    "Resolved GW1 historical team for transferred player N.Gonzalez.",
+    "Resolved GW1 historical team for transferred player N.Jackson.",
+    "Resolved GW1 historical team for transferred player Ndiaye.",
+    "Resolved GW1 historical team for transferred player Pinnock.",
+    "Resolved GW1 historical team for transferred player S\u00e1vio.",
+    "Resolved GW1 historical team for transferred player Tosin.",
+    "Resolved GW2 historical team for transferred player Danso.",
+    "Resolved GW2 historical team for transferred player Enzo.",
+    "Resolved GW2 historical team for transferred player Grealish.",
+    "Resolved GW2 historical team for transferred player Iroegbunam.",
+    "Resolved GW2 historical team for transferred player Mudryk.",
+    "Resolved GW2 historical team for transferred player Mu\u00f1oz.",
+    "Resolved GW2 historical team for transferred player Ndiaye.",
+    "Resolved GW2 historical team for transferred player Tosin."
+  ],
+  "sources": [
+    {
+      "url": "https://fantasy.premierleague.com/api/bootstrap-static/",
+      "sha256": "618caef6835e8d930e0c3980aa5b7ea72647fbf95362ac0c3731eac856b37f2b",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:37:32.026163+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/fixtures/",
+      "sha256": "113c3c674e681542b8a7926a02036cab9d438f7f1c0bd5d4410afa367a31ad04",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:37:40.424304+00:00"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/data/2025-26/gws/merged_gw.csv",
+      "sha256": "0d09f1f1cb1b5520ec8e2f25238aa652efe2a263d8ca7cb2b6538b27bf86727d",
+      "etag": "\"e3408a0a1366e630bbb5610f2677ef4617e9a60b5807ab58d5b7473ca3922773\"",
+      "fetched_at": "2026-10-03T00:16:42.334852+00:00",
+      "checked_at": "2026-10-03T00:37:47.786469+00:00"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/data/2025-26/players_raw.csv",
+      "sha256": "412ce0172016f8f98f25177dc6de9f3cd2a8ec7a6135f9aa638d7fdee784d67b",
+      "etag": "\"75d48bff5e76c34c3b8a14ce848f99ed33d1e1702508a5654c6355c8ed5bf03d\"",
+      "fetched_at": "2026-10-03T00:16:51.999253+00:00",
+      "checked_at": "2026-10-03T00:37:54.505430+00:00"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/data/2025-26/fixtures.csv",
+      "sha256": "2d7e3950d346df14ca486cb09e9b9ba406d37d943775244eed06cdc021ffb3a9",
+      "etag": "\"2dca067c1dc33bfc1a57e410cd4c5f34f734a29f584a56f6a8b1d75d541bd196\"",
+      "fetched_at": "2026-10-03T00:17:00.314611+00:00",
+      "checked_at": "2026-10-03T00:38:03.066459+00:00"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/data/2024-25/gws/merged_gw.csv",
+      "sha256": "5bbbcba6353b4c72ad273adcc8e3aa451946a826564679788f45b1cb3325b84e",
+      "etag": "\"e2982bde5c33929f878c2e8472868d7335ae578771400b94a10783210fc93fbe\"",
+      "fetched_at": "2026-10-03T00:12:27.427813+00:00",
+      "checked_at": "2026-10-03T00:38:10.117855+00:00"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/data/2024-25/players_raw.csv",
+      "sha256": "75686051b265cbe7755ac71213ecaad21b26ee1cc46a8bafbba19c39ce894b05",
+      "etag": "\"5e9ffae01e59ebd81e8152fc786419b4c3953251026d9a768c6abf8bf43eba23\"",
+      "fetched_at": "2026-10-03T00:12:33.372775+00:00",
+      "checked_at": "2026-10-03T00:38:16.909132+00:00"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/data/2024-25/fixtures.csv",
+      "sha256": "ce696e187569ca7c45da2562811d3c38f525b58e65575531be37bebd0769ee28",
+      "etag": "\"cf2837c12142c4207300285a0948809ce9d5c9ad6c9b23279c94ffd064aa273c\"",
+      "fetched_at": "2026-10-03T00:12:41.246837+00:00",
+      "checked_at": "2026-10-03T00:38:25.226319+00:00"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/data/2023-24/gws/merged_gw.csv",
+      "sha256": "e9c09c8856f1c86b4f920f46ddd5033af83409439dfda53be925df2a3e7c8a9e",
+      "etag": "\"c6bf115a34510e07098ca59b8ae6eb4a0c8c481151d0e51779dd374b5d440c61\"",
+      "fetched_at": "2026-10-03T00:12:03.402374+00:00",
+      "checked_at": "2026-10-03T00:38:33.676166+00:00"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/data/2023-24/players_raw.csv",
+      "sha256": "43d8cf5efb3d901f2499558c40b392b7f0ee22afe28030f36266ad29024c63d9",
+      "etag": "\"b558f3c368fb4fbde94bccc924446edb15cb0f5b4faba167218502c3df262195\"",
+      "fetched_at": "2026-10-03T00:12:12.275807+00:00",
+      "checked_at": "2026-10-03T00:38:40.864650+00:00"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/data/2023-24/fixtures.csv",
+      "sha256": "d8521bdbb80edb5141bc17df71bf6026275f2e56fd6a6dc6041b3ae23a39ce6a",
+      "etag": "\"4648753486c4e7482dfd3f24bc5c0ba092ab14f402a55966550b8ddfa621200e\"",
+      "fetched_at": "2026-10-03T00:12:19.635495+00:00",
+      "checked_at": "2026-10-03T00:38:47.119458+00:00"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/data/2026-27/gws/merged_gw.csv",
+      "sha256": "8a82823f87672ccfc648af978e08b51a3717f0616e2658322d4e432d70c0ac84",
+      "etag": "\"fd7f8d53d6aa7796e3f4a4b426db6a271872bb3782d292f6765caeff21cbf747\"",
+      "fetched_at": "2026-10-03T00:17:07.800306+00:00",
+      "checked_at": "2026-10-03T00:38:56.364863+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/event/1/live/",
+      "sha256": "0974be7e805ad6b65b3345bee327fee541c4e445837b2871473ed9ba1d794d87",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:39:03.092627+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/element-summary/28/",
+      "sha256": "a3e2d3370e77da952cef3b4b07870bef00566a71870c19907c244331849d3cb2",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:39:11.957463+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/element-summary/91/",
+      "sha256": "86664eb83ca887128fe0e0bad76c5fe251cc596589f4cd6d62e8f9bf7e8e84b6",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:39:18.753812+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/element-summary/131/",
+      "sha256": "9403f18de9ffb7bd02a1deacb2966b35e7cd41a1f2ebe25e9add269f199f8a64",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:39:26.068292+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/element-summary/147/",
+      "sha256": "3f5c90534fa18eb46a263e3887ba4459cdbb5addeea87ea7dfdbf209a70dacf5",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:39:34.570977+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/element-summary/153/",
+      "sha256": "2b3f8a1c0d6af2170b52bd814e9f3aa02287d582ef7ce4abe0023daecb1fa338",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:39:41.599676+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/element-summary/155/",
+      "sha256": "de666d088912cd5e8a2f99489078c47926c853be232a39c0d845df51072744e4",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:39:47.583648+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/element-summary/166/",
+      "sha256": "57b8fc13731a61cf22bd0071c08035965c5140a065c72777c338ffe79b45c85f",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:39:54.162904+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/element-summary/167/",
+      "sha256": "2d04657a471fba2d91973d18a46bfdfeab19d64165a885c0909bbc8dd7c41fbf",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:40:01.992636+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/element-summary/201/",
+      "sha256": "af8beaabdd94ab64951efaa0372cbdcbaa49c6dc9b11cc7d781428e14dcfb3f1",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:40:09.729059+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/element-summary/237/",
+      "sha256": "7badd6524e95922fdc2b4a598ef3ba620da4e6f58ff8ac0b6db9f9c0c37bf4a4",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:40:18.539512+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/element-summary/238/",
+      "sha256": "ce7376f4c466b095d24e03c5f38b8b9a9510a0b75bb597a9bb02b38819d7ee8e",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:40:27.709618+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/element-summary/240/",
+      "sha256": "35886193c8d1298bb8ff9ee4726216706954769a41d095e94eafed10f8b28e14",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:40:34.189817+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/element-summary/401/",
+      "sha256": "251a2693b3e0efd2cd8a8519364a77d05c38c72f2a72f66f5af840242b2f5d24",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:40:42.225251+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/element-summary/403/",
+      "sha256": "10aa3cbafdf052ce62ed180deda98051d2770abe91f1285aa64e42073d99082e",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:40:49.235607+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/element-summary/405/",
+      "sha256": "7a4ba6a1316bacd9dbd132e25a722a0823146ae48cb14ea943728e17265c3ce2",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:40:56.372423+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/element-summary/501/",
+      "sha256": "1d7b1c51861888e8c55ed07b814a268d030a6f4476712f40141069a687183885",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:41:04.166119+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/element-summary/578/",
+      "sha256": "3ca1972e48b7bce12e3c390954728ed9999d823c3ea0429e554f64909f5f9952",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:41:10.592316+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/event/2/live/",
+      "sha256": "2bc0e5b3ca2035f0f0cce42a4c77d699d6c316bc290342cddf562b1a317f5715",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:41:17.812523+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/event/3/live/",
+      "sha256": "c33c2af4674b0a9d4276b412a441ebae8b87e01a3d093cd113446e7ef6a02482",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:41:24.912811+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/event/4/live/",
+      "sha256": "a4ebf3dac44cb598e6f62a1dd5333e3d5ce7206303dbda62f513830ae7cfd095",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:41:32.727166+00:00"
+    },
+    {
+      "url": "https://fantasy.premierleague.com/api/event/5/live/",
+      "sha256": "aeee6dd5b56567b04ef9b4e5b9828ee4d81e094803dc0e6553cd3b394178c6dd",
+      "etag": null,
+      "fetched_at": "2026-10-03T00:41:39.789207+00:00"
+    }
+  ],
+  "data_policy": "Vaastav history; finalized official current results; current FPL prices and flags.",
+  "forecast_created_at": "2026-10-03T00:48:06.443982+00:00",
+  "forecast_weeks": [
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "model_retrained": false,
+  "model_trained_at": "2026-10-03T00:44:39.942984+00:00",
+  "model_fingerprint": "3971aacc32a635d48f33b75636d55030df3d912a2b2a28450a42f7667d53ea0c",
+  "cached_run": true,
+  "offline_run": false
+}

@@ -1,0 +1,604 @@
+{
+  "created_at": "2026-10-03T00:44:39.942984+00:00",
+  "validation_season": "2025-26",
+  "validation_policy": "Train strictly before each block; select on GW21-32; test on GW33-38.",
+  "regular_player_definition": "Pre-game rolling three-fixture average minutes >=45.",
+  "target": "Points per scheduled fixture (GW totals are divided by fixture count).",
+  "feature_version": "deadline-safe-gw-v1",
+  "rows": 88215,
+  "positions": {
+    "GK": {
+      "selected_method": "gradient_boosting",
+      "development_rmse_ml": 2.776391386475735,
+      "development_rmse_baseline": 3.000943995230305,
+      "test_all_players": {
+        "rows": 550,
+        "rmse": 1.2107162072420896,
+        "mae": 0.5457015070106056
+      },
+      "test_regular_players": {
+        "rows": 114,
+        "rmse": 2.517528275248518,
+        "mae": 1.9771786101326259
+      },
+      "blocks": [
+        {
+          "start_gw": 21,
+          "end_gw": 26,
+          "role": "development",
+          "all_players": {
+            "gradient_boosting": {
+              "rows": 555,
+              "rmse": 1.431076470322083,
+              "mae": 0.5748367255688722
+            },
+            "form_baseline": {
+              "rows": 555,
+              "rmse": 1.555852577737086,
+              "mae": 0.6002123990631824
+            }
+          },
+          "regular_players": {
+            "gradient_boosting": {
+              "rows": 120,
+              "rmse": 2.726541133633166,
+              "mae": 2.093735958933953
+            },
+            "form_baseline": {
+              "rows": 120,
+              "rmse": 2.9842975193548944,
+              "mae": 2.349861111111111
+            }
+          }
+        },
+        {
+          "start_gw": 27,
+          "end_gw": 32,
+          "role": "development",
+          "all_players": {
+            "gradient_boosting": {
+              "rows": 552,
+              "rmse": 1.5372401919342997,
+              "mae": 0.6280962969927135
+            },
+            "form_baseline": {
+              "rows": 552,
+              "rmse": 1.635138492079962,
+              "mae": 0.6267805954899366
+            }
+          },
+          "regular_players": {
+            "gradient_boosting": {
+              "rows": 116,
+              "rmse": 2.8270357457280086,
+              "mae": 2.2062451875016844
+            },
+            "form_baseline": {
+              "rows": 116,
+              "rmse": 3.0180678699847108,
+              "mae": 2.3526041666666666
+            }
+          }
+        },
+        {
+          "start_gw": 33,
+          "end_gw": 38,
+          "role": "test",
+          "all_players": {
+            "gradient_boosting": {
+              "rows": 550,
+              "rmse": 1.2107162072420896,
+              "mae": 0.5457015070106056
+            },
+            "form_baseline": {
+              "rows": 550,
+              "rmse": 1.3154794738279993,
+              "mae": 0.5825307394101769
+            }
+          },
+          "regular_players": {
+            "gradient_boosting": {
+              "rows": 114,
+              "rmse": 2.517528275248518,
+              "mae": 1.9771786101326259
+            },
+            "form_baseline": {
+              "rows": 114,
+              "rmse": 2.7183076565382627,
+              "mae": 2.2469298245614033
+            }
+          }
+        }
+      ],
+      "training_rows": 9860,
+      "top_features": [
+        {
+          "feature": "total_points_mean8",
+          "importance": 0.1913762424051558
+        },
+        {
+          "feature": "points_last",
+          "importance": 0.16270426060814078
+        },
+        {
+          "feature": "influence_mean3",
+          "importance": 0.1284908719178631
+        },
+        {
+          "feature": "bps_mean8",
+          "importance": 0.1147075100785057
+        },
+        {
+          "feature": "bps_mean3",
+          "importance": 0.07355253225151921
+        },
+        {
+          "feature": "minutes_last",
+          "importance": 0.05783539922639808
+        },
+        {
+          "feature": "starts_mean8",
+          "importance": 0.042657453855947026
+        },
+        {
+          "feature": "expected_goals_conceded_mean8",
+          "importance": 0.032217363845831584
+        },
+        {
+          "feature": "minutes_mean3",
+          "importance": 0.020634362566201526
+        },
+        {
+          "feature": "total_points_mean3",
+          "importance": 0.019375349550606838
+        }
+      ]
+    },
+    "DEF": {
+      "selected_method": "gradient_boosting",
+      "development_rmse_ml": 3.0849012512768796,
+      "development_rmse_baseline": 3.3307753891098297,
+      "test_all_players": {
+        "rows": 1538,
+        "rmse": 1.9038200723155068,
+        "mae": 1.0168382104764488
+      },
+      "test_regular_players": {
+        "rows": 481,
+        "rmse": 2.802085151978452,
+        "mae": 2.1826056892016945
+      },
+      "blocks": [
+        {
+          "start_gw": 21,
+          "end_gw": 26,
+          "role": "development",
+          "all_players": {
+            "gradient_boosting": {
+              "rows": 1578,
+              "rmse": 1.9201551298972315,
+              "mae": 1.1215038450608115
+            },
+            "form_baseline": {
+              "rows": 1578,
+              "rmse": 2.1149701340543925,
+              "mae": 1.1681175872648801
+            }
+          },
+          "regular_players": {
+            "gradient_boosting": {
+              "rows": 519,
+              "rmse": 2.9334567114182457,
+              "mae": 2.371332356917184
+            },
+            "form_baseline": {
+              "rows": 519,
+              "rmse": 3.2400158882437657,
+              "mae": 2.5883469813744377
+            }
+          }
+        },
+        {
+          "start_gw": 27,
+          "end_gw": 32,
+          "role": "development",
+          "all_players": {
+            "gradient_boosting": {
+              "rows": 1544,
+              "rmse": 2.122197259809027,
+              "mae": 1.155093565586136
+            },
+            "form_baseline": {
+              "rows": 1544,
+              "rmse": 2.2350513553252442,
+              "mae": 1.1760471049692125
+            }
+          },
+          "regular_players": {
+            "gradient_boosting": {
+              "rows": 491,
+              "rmse": 3.237288961351659,
+              "mae": 2.5031442376246424
+            },
+            "form_baseline": {
+              "rows": 491,
+              "rmse": 3.424096207458765,
+              "mae": 2.680946622539036
+            }
+          }
+        },
+        {
+          "start_gw": 33,
+          "end_gw": 38,
+          "role": "test",
+          "all_players": {
+            "gradient_boosting": {
+              "rows": 1538,
+              "rmse": 1.9038200723155068,
+              "mae": 1.0168382104764488
+            },
+            "form_baseline": {
+              "rows": 1538,
+              "rmse": 2.106239239985597,
+              "mae": 1.065911842135873
+            }
+          },
+          "regular_players": {
+            "gradient_boosting": {
+              "rows": 481,
+              "rmse": 2.802085151978452,
+              "mae": 2.1826056892016945
+            },
+            "form_baseline": {
+              "rows": 481,
+              "rmse": 3.1592910749419696,
+              "mae": 2.4087166493416494
+            }
+          }
+        }
+      ],
+      "training_rows": 28977,
+      "top_features": [
+        {
+          "feature": "influence_mean3",
+          "importance": 0.1361805572371762
+        },
+        {
+          "feature": "minutes_last",
+          "importance": 0.13307282886878088
+        },
+        {
+          "feature": "expected_goals_conceded_mean3",
+          "importance": 0.11292208948837071
+        },
+        {
+          "feature": "total_points_mean8",
+          "importance": 0.10726151074919597
+        },
+        {
+          "feature": "starts_mean3",
+          "importance": 0.08250874827916622
+        },
+        {
+          "feature": "total_points_mean3",
+          "importance": 0.06577107354595015
+        },
+        {
+          "feature": "minutes_mean3",
+          "importance": 0.060421685242433305
+        },
+        {
+          "feature": "points_last",
+          "importance": 0.028537996377503747
+        },
+        {
+          "feature": "threat_mean3",
+          "importance": 0.02387573026741722
+        },
+        {
+          "feature": "opponent_goals_for",
+          "importance": 0.022068247535101504
+        }
+      ]
+    },
+    "MID": {
+      "selected_method": "gradient_boosting",
+      "development_rmse_ml": 2.81385595320686,
+      "development_rmse_baseline": 3.059721805704072,
+      "test_all_players": {
+        "rows": 2139,
+        "rmse": 1.7248433587661147,
+        "mae": 0.8755709659413115
+      },
+      "test_regular_players": {
+        "rows": 515,
+        "rmse": 2.8717225771036388,
+        "mae": 2.1608108025822412
+      },
+      "blocks": [
+        {
+          "start_gw": 21,
+          "end_gw": 26,
+          "role": "development",
+          "all_players": {
+            "gradient_boosting": {
+              "rows": 2174,
+              "rmse": 1.8327922890142194,
+              "mae": 0.9354661826624272
+            },
+            "form_baseline": {
+              "rows": 2174,
+              "rmse": 1.9679593131275523,
+              "mae": 0.9696671398895358
+            }
+          },
+          "regular_players": {
+            "gradient_boosting": {
+              "rows": 555,
+              "rmse": 2.8606662965283487,
+              "mae": 2.16625997681486
+            },
+            "form_baseline": {
+              "rows": 555,
+              "rmse": 3.107714367781685,
+              "mae": 2.3888513513513514
+            }
+          }
+        },
+        {
+          "start_gw": 27,
+          "end_gw": 32,
+          "role": "development",
+          "all_players": {
+            "gradient_boosting": {
+              "rows": 2139,
+              "rmse": 1.7025472012334755,
+              "mae": 0.8488337399235092
+            },
+            "form_baseline": {
+              "rows": 2139,
+              "rmse": 1.8374664127949605,
+              "mae": 0.8516748823443819
+            }
+          },
+          "regular_players": {
+            "gradient_boosting": {
+              "rows": 540,
+              "rmse": 2.764919615722138,
+              "mae": 2.0638743963968613
+            },
+            "form_baseline": {
+              "rows": 540,
+              "rmse": 3.009598725893784,
+              "mae": 2.2091350308641973
+            }
+          }
+        },
+        {
+          "start_gw": 33,
+          "end_gw": 38,
+          "role": "test",
+          "all_players": {
+            "gradient_boosting": {
+              "rows": 2139,
+              "rmse": 1.7248433587661147,
+              "mae": 0.8755709659413115
+            },
+            "form_baseline": {
+              "rows": 2139,
+              "rmse": 1.9016388528745802,
+              "mae": 0.9308624754808527
+            }
+          },
+          "regular_players": {
+            "gradient_boosting": {
+              "rows": 515,
+              "rmse": 2.8717225771036388,
+              "mae": 2.1608108025822412
+            },
+            "form_baseline": {
+              "rows": 515,
+              "rmse": 3.2142130798628763,
+              "mae": 2.438276699029126
+            }
+          }
+        }
+      ],
+      "training_rows": 39052,
+      "top_features": [
+        {
+          "feature": "minutes_mean3",
+          "importance": 0.292519079078268
+        },
+        {
+          "feature": "minutes_last",
+          "importance": 0.19289763125682552
+        },
+        {
+          "feature": "points_last",
+          "importance": 0.13038741536291448
+        },
+        {
+          "feature": "total_points_mean3",
+          "importance": 0.05714035742811876
+        },
+        {
+          "feature": "threat_mean3",
+          "importance": 0.05597630954511661
+        },
+        {
+          "feature": "threat_mean8",
+          "importance": 0.04754463660559739
+        },
+        {
+          "feature": "creativity_mean8",
+          "importance": 0.028816016515145274
+        },
+        {
+          "feature": "expected_goals_mean8",
+          "importance": 0.020508765239493177
+        },
+        {
+          "feature": "total_points_mean8",
+          "importance": 0.0200458843061282
+        },
+        {
+          "feature": "creativity_mean3",
+          "importance": 0.017216747165622954
+        }
+      ]
+    },
+    "FWD": {
+      "selected_method": "gradient_boosting",
+      "development_rmse_ml": 3.3578236215736834,
+      "development_rmse_baseline": 3.6137106871017357,
+      "test_all_players": {
+        "rows": 535,
+        "rmse": 2.1775475855716797,
+        "mae": 1.1106522665311545
+      },
+      "test_regular_players": {
+        "rows": 141,
+        "rmse": 3.5854329730334533,
+        "mae": 2.6987694301398824
+      },
+      "blocks": [
+        {
+          "start_gw": 21,
+          "end_gw": 26,
+          "role": "development",
+          "all_players": {
+            "gradient_boosting": {
+              "rows": 535,
+              "rmse": 2.006049412952007,
+              "mae": 1.083729585894678
+            },
+            "form_baseline": {
+              "rows": 535,
+              "rmse": 2.15517036423317,
+              "mae": 1.1166869158878505
+            }
+          },
+          "regular_players": {
+            "gradient_boosting": {
+              "rows": 137,
+              "rmse": 3.138160347988915,
+              "mae": 2.471438306422954
+            },
+            "form_baseline": {
+              "rows": 137,
+              "rmse": 3.412479569335381,
+              "mae": 2.6627919708029197
+            }
+          }
+        },
+        {
+          "start_gw": 27,
+          "end_gw": 32,
+          "role": "development",
+          "all_players": {
+            "gradient_boosting": {
+              "rows": 534,
+              "rmse": 2.0994375750223933,
+              "mae": 1.0793815389354329
+            },
+            "form_baseline": {
+              "rows": 534,
+              "rmse": 2.252048530051877,
+              "mae": 1.103343534044308
+            }
+          },
+          "regular_players": {
+            "gradient_boosting": {
+              "rows": 133,
+              "rmse": 3.5699893191053538,
+              "mae": 2.64862395301501
+            },
+            "form_baseline": {
+              "rows": 133,
+              "rmse": 3.809897111466508,
+              "mae": 2.8061951754385968
+            }
+          }
+        },
+        {
+          "start_gw": 33,
+          "end_gw": 38,
+          "role": "test",
+          "all_players": {
+            "gradient_boosting": {
+              "rows": 535,
+              "rmse": 2.1775475855716797,
+              "mae": 1.1106522665311545
+            },
+            "form_baseline": {
+              "rows": 535,
+              "rmse": 2.3284360505992856,
+              "mae": 1.180833525761353
+            }
+          },
+          "regular_players": {
+            "gradient_boosting": {
+              "rows": 141,
+              "rmse": 3.5854329730334533,
+              "mae": 2.6987694301398824
+            },
+            "form_baseline": {
+              "rows": 141,
+              "rmse": 3.7721425597461926,
+              "mae": 2.855961879432624
+            }
+          }
+        }
+      ],
+      "training_rows": 10326,
+      "top_features": [
+        {
+          "feature": "minutes_last",
+          "importance": 0.13313270283876522
+        },
+        {
+          "feature": "threat_mean3",
+          "importance": 0.11206692222533583
+        },
+        {
+          "feature": "points_last",
+          "importance": 0.11084488600816093
+        },
+        {
+          "feature": "expected_goals_mean3",
+          "importance": 0.09212537658248651
+        },
+        {
+          "feature": "influence_mean3",
+          "importance": 0.0694371287502749
+        },
+        {
+          "feature": "minutes_mean3",
+          "importance": 0.057993303057397326
+        },
+        {
+          "feature": "total_points_mean3",
+          "importance": 0.057472177687424034
+        },
+        {
+          "feature": "starts_mean3",
+          "importance": 0.04430281693569597
+        },
+        {
+          "feature": "minutes_mean8",
+          "importance": 0.03875486571197125
+        },
+        {
+          "feature": "expected_goals_conceded_mean3",
+          "importance": 0.029471214261710184
+        }
+      ]
+    }
+  },
+  "limitations": [
+    "Historical fixture assignments are final schedules, not archived deadline snapshots.",
+    "Rule changes affect comparability of older seasons; scoring era is a feature.",
+    "Forecasts are estimates, and later weeks reuse the latest observed player form."
+  ]
+}

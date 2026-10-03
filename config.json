@@ -1,0 +1,12 @@
+{
+  "historical_seasons": "auto",
+  "history_seasons_to_use": 3,
+  "vaastav_repository": "vaastav/Fantasy-Premier-League",
+  "vaastav_ref": "master",
+  "horizon": 5,
+  "discount": 0.8,
+  "budget": 100.0,
+  "entry_id": null,
+  "request_timeout": 40,
+  "solver_seconds": 30
+}
