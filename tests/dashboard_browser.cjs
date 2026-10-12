@@ -45,6 +45,7 @@ async function main(){
       await page.getByRole('button',{name:'News & expert views',exact:true}).click();
       assert.equal(await page.locator('#qualCoverageBody tr').count(),2);count++;
       await page.waitForFunction(()=>document.getElementById('qualSourceList').value.includes('FPLTom'));count++;
+      assert.ok((await page.locator('#qualImportSource').boundingBox()).width>=200);count++;
       assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);count++;
       await page.screenshot({path:`test-artifacts/qualitative-${viewport.width}.png`,fullPage:true});
       assert.deepEqual(errors,[]);count++;

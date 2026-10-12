@@ -19,8 +19,12 @@ Verified locally on 12 October 2026:
   soft-influence gain is zero. Historical v3 metrics below do not establish the
   effectiveness of qualitative evidence.
 
-The desktop/mobile browser suite also exercises qualitative controls and source
-tables. Its release CI outcome is recorded after publication.
+The [release CI run](https://github.com/rahulyarla/FPL-Advisor/actions/runs/38233478664)
+passed 84 contracts on Linux/Python 3.12 and Windows/Python 3.13, 31 HTTP/DOM checks
+and 40 real Chromium desktop/mobile checks. Its screenshots were visually reviewed;
+mobile tables scroll inside their panels. A subsequent small layout correction
+gives the transcript-import fields full usable width on mobile and adds two browser
+width guards.
 
 ## Earlier v3 statistical benchmark
 
