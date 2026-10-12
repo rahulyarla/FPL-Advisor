@@ -1,0 +1,167 @@
+{
+  "mode": "wildcard",
+  "squad": [
+    1,
+    12,
+    68,
+    109,
+    115,
+    124,
+    169,
+    176,
+    332,
+    334,
+    346,
+    411,
+    426,
+    449,
+    542
+  ],
+  "plans": [
+    {
+      "gameweek": 7,
+      "starters": [
+        1,
+        12,
+        68,
+        115,
+        124,
+        334,
+        346,
+        411,
+        426,
+        449,
+        542
+      ],
+      "captain": 411,
+      "vice_captain": 124,
+      "bench_goalkeeper": 109,
+      "bench_order": [
+        176,
+        332,
+        169
+      ],
+      "formation": "3-5-2",
+      "expected_points_with_captain": 64.704
+    },
+    {
+      "gameweek": 8,
+      "starters": [
+        1,
+        12,
+        68,
+        124,
+        332,
+        334,
+        346,
+        411,
+        426,
+        449,
+        542
+      ],
+      "captain": 411,
+      "vice_captain": 426,
+      "bench_goalkeeper": 109,
+      "bench_order": [
+        176,
+        115,
+        169
+      ],
+      "formation": "3-5-2",
+      "expected_points_with_captain": 60.829
+    },
+    {
+      "gameweek": 9,
+      "starters": [
+        1,
+        12,
+        68,
+        124,
+        176,
+        334,
+        346,
+        411,
+        426,
+        449,
+        542
+      ],
+      "captain": 411,
+      "vice_captain": 542,
+      "bench_goalkeeper": 109,
+      "bench_order": [
+        332,
+        115,
+        169
+      ],
+      "formation": "3-5-2",
+      "expected_points_with_captain": 59.881
+    },
+    {
+      "gameweek": 10,
+      "starters": [
+        1,
+        12,
+        68,
+        124,
+        332,
+        334,
+        346,
+        411,
+        426,
+        449,
+        542
+      ],
+      "captain": 411,
+      "vice_captain": 346,
+      "bench_goalkeeper": 109,
+      "bench_order": [
+        115,
+        176,
+        169
+      ],
+      "formation": "3-5-2",
+      "expected_points_with_captain": 63.196
+    },
+    {
+      "gameweek": 11,
+      "starters": [
+        1,
+        12,
+        68,
+        124,
+        176,
+        332,
+        334,
+        346,
+        411,
+        426,
+        542
+      ],
+      "captain": 411,
+      "vice_captain": 124,
+      "bench_goalkeeper": 109,
+      "bench_order": [
+        115,
+        449,
+        169
+      ],
+      "formation": "3-5-2",
+      "expected_points_with_captain": 61.647
+    }
+  ],
+  "bought": [],
+  "sold": [],
+  "transfer_count": 0,
+  "hit_points": 0,
+  "remaining_bank": 0.1,
+  "market_squad_value": 99.9,
+  "discounted_expected_points_after_hits": 209.298,
+  "solver_status": "optimal_within_tolerance",
+  "relative_gap": 0.00044675753131220456,
+  "assumptions": [
+    "No further transfers during this forecast horizon.",
+    "Latest observed form and official availability are held constant in later weeks.",
+    "Vice-captain fallback and automatic substitutions are not simulated.",
+    "Bench cover has a small tie-breaking weight."
+  ]
+}

@@ -1,0 +1,52 @@
+name: Test FPL Advisor
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: '3.12'
+          - os: windows-latest
+            python: '3.13'
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: python -m unittest discover -s tests -v
+  dashboard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: python -m pip install -r requirements.txt
+      - run: npm install --no-save jsdom playwright
+      - run: npx playwright install --with-deps chromium
+      - name: Check HTTP, DOM, desktop and mobile flows
+        shell: bash
+        run: |
+          python tests/dashboard_fixture.py --port 8877 > /tmp/fpl-test-server.log 2>&1 &
+          fixture_pid=$!
+          trap 'kill "$fixture_pid"' EXIT
+          python -c "import time,urllib.request; time.sleep(3); urllib.request.urlopen('http://127.0.0.1:8877/api/state').read()"
+          node tests/dashboard_dom.cjs
+          node tests/dashboard_browser.cjs

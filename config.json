@@ -8,5 +8,6 @@
   "budget": 100.0,
   "entry_id": null,
   "request_timeout": 40,
-  "solver_seconds": 30
+  "solver_seconds": 30,
+  "scenario_samples": 5000
 }

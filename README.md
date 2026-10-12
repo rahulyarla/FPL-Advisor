@@ -1,10 +1,48 @@
-# FPL Advisor
+# FPL Advisor v2
 
 A working local FPL dashboard with trained player forecasts, a best XI and captain,
 transfer comparisons, and a wildcard builder. It follows the position-specific
 gradient-boosted regression approach in [Benjamin Tindal's FPL-Auto](https://github.com/bentindal/FPL-Auto).
 The application code is a new implementation, with a current-data pipeline and a
 different squad optimizer. It is not a claim to reproduce that project's season scores.
+
+## What's new in v2
+
+- **Optional rivals:** add any number of FPL entry IDs or official team URLs, including bulk imports. Include/exclude and remove individual rivals. Their snapshots are saved by season in `user/rivals.json` and refreshed with the local dashboard's scheduled data update.
+- **Two recommendations:** the usual points-first plan remains available. Check **Also build a version that considers my rivals** to calculate both versions, then switch between **Standard plan** and **With rivals**. This works for lineups, transfers and wildcards.
+- **Secondary influence:** choose **Protect a lead** for shared exposure or **Chase upside** for differentials. Influence defaults to 8% and cannot exceed 15%. The alternative may sacrifice at most 1% of predicted points by default, configurable from 0% to a hard maximum of 2%. The limit applies to every forecast gameweek and to the weighted horizon, after your hits. Zero influence returns the exact standard plan.
+- **Player graphs:** a points graph for every squad player; inspect actual/forecast points, minutes, xG and xA; compare up to three players and select a recent window. A squad fixture heatmap shows projected points and opponents, including blank and double weeks.
+- **Rival context:** squad ownership, deadline captains, used chips, finalized cumulative points and paired next-GW scenarios. All included rivals receive equal weight, so adding more teams cannot increase the rival influence.
+
+### Use the rival option
+
+1. Import/check your own team on **My team & transfers** as before.
+2. Open **Rivals**, paste entry numbers or official links, and click **Add rivals**. You can paste multiple lines or comma-separated IDs.
+3. Choose which rivals to include, your protect/chase preference, influence and allowed point sacrifice.
+4. On **My team & transfers** or **Wildcard builder**, check **Also build a version that considers my rivals**, then calculate normally.
+5. Compare the two columns and use **Standard plan** / **With rivals** to view each XI, captain and squad. Identical plans are a valid result when a different plan is not worthwhile within the limits.
+6. Open **Player graphs**, or click a recommended player, to inspect the underlying form and fixtures.
+
+### What the rival calculation means
+
+Rival teams do **not** become features in the player points model. Subtracting a fixed rival score from your expected score would not change which squad maximizes expected points. The optional optimizer instead adds a small, explicit exposure preference: it favors covering popular rival selections when protecting, and lower shared exposure when chasing. Hard point constraints keep this preference secondary.
+
+Rival future XIs/captains are projected by enumerating legal formations within their last public squads. Future transfers, paid hits, chip choices, autosubs and vice-captain fallback are unknown. A previously active Triple Captain or Bench Boost is not assumed to repeat in the next gameweek.
+
+The comparison runs 5,000 reproducible, paired scenarios using historical position RMSE. A shared player gets the same simulated points in all teams. Other player and gameweek errors are independent Gaussian approximations. **Scenario percentages are not calibrated probabilities of beating a rival or winning your league.** They are diagnostics of next-GW relative exposure and risk, rather than season-rank forecasts.
+
+Charts use finalized current-season results only, preserve double-gameweek totals, and keep actuals separate from predictions. Unrecorded observations are not filled with invented scores. Chart values can be read by hovering or keyboard focus; chart comparisons cover a selected recent window, while their totals table covers the finalized season.
+
+The GitHub folder layout has been restored: package code is under `fpl_advisor/`, web assets under `fpl_advisor/static/`, tests under `tests/` and workflows under `.github/workflows/`. Download the entire repository ZIP; keep these folders intact.
+
+## Updating an earlier copy
+
+Close the old adviser's command window first. Download this repository with
+**Code → Download ZIP**, extract the entire ZIP, open the extracted project
+folder, and double-click **START_WINDOWS.bat**. Your saved squad uses the same
+browser address and season. If updating a v2 copy that already has saved rivals,
+copy its `user/` folder into the new project before starting it. Never upload
+that folder to GitHub.
 
 ## Start on Windows
 
@@ -38,7 +76,8 @@ off the computer or closing the terminal stops these scheduled local updates.
 
 The app does not submit transfers or activate chips in your FPL account. It uses
 public, read-only data and requires no FPL password. Your editable squad is stored
-in this browser's local storage. Public entry IDs are sent only to official FPL
+in this browser's local storage. Rival snapshots are saved locally in `user/rivals.json`;
+this folder is ignored by Git and excluded from the public repository. Public entry IDs are sent only to official FPL
 endpoints when you explicitly import a team.
 
 ## Data updates
@@ -201,3 +240,9 @@ That reference squad is a £100m example, not your imported team.
 Vaastav Anand's source license is preserved in `VAastav_LICENSE.txt`. The data is
 owned by its original providers, as noted in that license. FPL-Auto's algorithm
 and author are credited; its source files are not bundled or copied here.
+
+## Dashboard research and testing
+
+The added views take inspiration from LiveFPL's ownership context, FPL Review's draft comparisons and Fantasy Football Hub's player comparison tools. Source links and the resulting choices are in [DASHBOARD_RESEARCH.md](DASHBOARD_RESEARCH.md). No paid projections or third-party website code are bundled.
+
+See [TESTING.md](TESTING.md) for verified checks and limitations. `Test FPL Advisor` runs Python contracts on Linux and Windows, plus HTTP/DOM and desktop/mobile Chromium checks on GitHub Actions. Your normal launcher needs Python only; Node dependencies are used solely by optional developer/CI tests.
