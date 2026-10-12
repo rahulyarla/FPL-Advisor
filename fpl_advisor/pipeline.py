@@ -41,7 +41,7 @@ def cached_inputs(root):
         raise DataError("No complete saved snapshot. Run an online refresh first.") from exc
 
 
-def run(root, offline=False, cached=False, force=False, progress=lambda message: None):
+def run(root, offline=False, cached=False, force=False, progress=lambda message: None, skip_qualitative=False):
     root = Path(root)
     if not _LOCK.acquire(blocking=False):
         raise DataError("A refresh is already running.")
@@ -81,6 +81,12 @@ def run(root, offline=False, cached=False, force=False, progress=lambda message:
                     "model_fingerprint": bundle["fingerprint"], "cached_run": bool(cached),
                     "model_version": bundle.get("model_version"), "model_trained_through": bundle.get("trained_through", int(training.order.max())),
                     "offline_run": bool(offline)}
+        qualitative, candidate_players, learned_players = {}, [], []
+        if config.get("qualitative_enabled", True) and not skip_qualitative:
+            from .qualitative import build
+            qualitative, candidate_players, learned_players = build(
+                root, json.loads(predictions.to_json(orient="records")), manifest, history, config,
+                online=not (cached or offline), progress=progress)
         progress("Saving forecasts and validation results")
         data = root / "data"
         reports = root / "reports"
@@ -111,9 +117,13 @@ def run(root, offline=False, cached=False, force=False, progress=lambda message:
             shutil.copyfile(root / "models/backtest_predictions.csv.gz", reports / "backtest_predictions.csv.gz")
         write_json(data / "manifest.json", manifest)
         snapshot = {"manifest": manifest, "validation": bundle["report"], "feedback": feedback,
-                    "players": json.loads(predictions.to_json(orient="records"))}
+                    "players": json.loads(predictions.to_json(orient="records")), "qualitative": qualitative,
+                    "qualitative_candidate_players": candidate_players, "qualitative_learned_players": learned_players}
         archive_snapshot(root, snapshot, bootstrap)
-        write_json(reports / "snapshot.json", snapshot)
+        if qualitative:
+            from .qualitative import archive_pair
+            archive_pair(root, snapshot)
+        write_json(reports / "snapshot.json", {k: v for k, v in snapshot.items() if k not in ("qualitative", "qualitative_candidate_players", "qualitative_learned_players")})
         progress(f"Ready: {manifest['season']} GW{manifest['next_gameweek']}, {len(predictions)} players")
         return manifest
     finally:
@@ -125,7 +135,19 @@ def state(root):
     report = root / "reports/snapshot.json"
     if not report.exists():
         return {"ready": False, "message": "Use Refresh data and model to get started."}
-    return {"ready": True, **json.loads(report.read_text())}
+    snapshot = json.loads(report.read_text())
+    private_report = root / "reports/qualitative.json"
+    if private_report.exists():
+        q = json.loads(private_report.read_text())
+        m = snapshot["manifest"]
+        if q.get("season") == m["season"] and q.get("origin_gw") == m["next_gameweek"] and q.get("stats_created_at") == m["created_at"]:
+            snapshot["qualitative"] = q
+    if snapshot.get("qualitative") and not snapshot.get("qualitative_candidate_players"):
+        from .qualitative import apply_evidence
+        q = snapshot["qualitative"]
+        candidates, learned = apply_evidence(snapshot["players"], snapshot["manifest"]["forecast_weeks"], q, q.get("discount", .8), q.get("learned_gain", 0))
+        snapshot.update({"qualitative_candidate_players": candidates, "qualitative_learned_players": learned})
+    return {"ready": True, **snapshot}
 
 
 def public_team(root, entry_id):
@@ -167,6 +189,19 @@ def selection(root, payload):
     current = state(root)
     if not current["ready"]:
         raise DataError("Refresh data and train the model first.")
+    if any(k in payload and not isinstance(payload[k], bool) for k in ("compare_qualitative", "validated_only")):
+        raise DataError("Qualitative comparison switches must be on or off.")
+    if payload.get("compare_qualitative") is True:
+        options = {k: v for k, v in payload.items() if k != "compare_qualitative"}
+        alternate_view = "learned" if payload.get("validated_only") is True else "qualitative"
+        stats = selection(root, {**options, "forecast_view": "stats"})
+        alternate = selection(root, {**options, "forecast_view": alternate_view})
+        return {"stats_only": stats, "with_qualitative": alternate, "alternate_view": alternate_view,
+                "evidence_as_of": current.get("qualitative", {}).get("as_of"),
+                "note": current.get("qualitative", {}).get("experimental_note", ""),
+                "learning": current.get("qualitative", {}).get("learning", {}),
+                "player_changes": [{"id": int(k), **{field: p[field] for field in ("stats_points", "experimental_points", "experimental_delta", "learned_delta", "notes")}}
+                                   for k, p in current.get("qualitative", {}).get("players", {}).items() if p["experimental_delta"] != 0]}
     config = load_config(root)
     mode = payload.get("mode", "lineup")
     owned = payload.get("owned", [])
@@ -177,7 +212,19 @@ def selection(root, payload):
     options.setdefault("mode", mode)
     options["discount"] = float(config["discount"])
     options["seconds"] = float(config.get("solver_seconds", 30))
-    frame = pd.DataFrame(current["players"])
+    forecast_view = payload.get("forecast_view", "stats")
+    if forecast_view not in ("stats", "qualitative", "learned"):
+        raise DataError("Forecast view must be stats, qualitative or learned.")
+    variant = "qualitative_candidate_players" if forecast_view == "qualitative" else "qualitative_learned_players"
+    if forecast_view != "stats" and not current.get(variant):
+        raise DataError("Refresh qualitative evidence before using this forecast view.")
+    if forecast_view != "stats":
+        from .qual_sources import when
+        if when(utc_now()) >= when(current["manifest"]["deadline"]):
+            raise DataError("This gameweek deadline has passed. Refresh data before using qualitative forecasts.")
+        if (when(utc_now()) - when(current["qualitative"]["as_of"])).total_seconds() > 86400:
+            raise DataError("Qualitative evidence is more than 24 hours old. Refresh evidence first.")
+    frame = pd.DataFrame(current["players"] if forecast_view == "stats" else current[variant])
     weeks = current["manifest"]["forecast_weeks"]
     if "compare_rivals" in payload and not isinstance(payload["compare_rivals"], bool):
         raise DataError("The rival comparison switch must be on or off.")
@@ -196,3 +243,24 @@ def selection(root, payload):
                                        max_points_loss=payload.get("max_points_loss", .01),
                                        samples=config.get("scenario_samples", 5000))
     return recommend(frame, weeks, **options)
+
+
+def refresh_qualitative(root, online=True, progress=lambda message: None):
+    """Refresh only text evidence, preserving quantitative model/data timestamps."""
+    if not _LOCK.acquire(blocking=False):
+        raise DataError("A refresh is already running. Try again after it finishes.")
+    try:
+        from .qualitative import build, archive_pair
+        root = Path(root)
+        snapshot = state(root)
+        if not snapshot["ready"]:
+            raise DataError("Refresh player data first.")
+        history, _, _, _ = cached_inputs(root)
+        report, candidates, learned = build(root, snapshot["players"], snapshot["manifest"], history, load_config(root), online, progress)
+        snapshot.update({"qualitative": report, "qualitative_candidate_players": candidates, "qualitative_learned_players": learned})
+        snapshot.pop("ready", None)
+        archive_pair(root, snapshot)
+        write_json(root / "reports/snapshot.json", {k: v for k, v in snapshot.items() if k not in ("qualitative", "qualitative_candidate_players", "qualitative_learned_players")})
+        return report
+    finally:
+        _LOCK.release()

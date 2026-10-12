@@ -25,6 +25,9 @@ function restoreRivalSettings(){
   $('influenceValue').textContent=$('rivalInfluence').value+'%';
 }
 async function loadExtras(){
+  DATA.stats_players=DATA.players;
+  if(FORECAST_VIEW!=='stats'&&DATA.qualitative_candidate_players?.length)DATA.players=forecastRows(FORECAST_VIEW);else FORECAST_VIEW='stats';
+  renderQualitative();renderPlayers();
   const outcomes=await Promise.allSettled([request('/api/rivals'),request('/api/analytics')]);
   if(outcomes[0].status==='fulfilled'){RIVALS=outcomes[0].value.rivals;renderRivals();}
   else fail('Rival list could not load: '+outcomes[0].reason.message);
@@ -100,9 +103,15 @@ function chartWeeks(ids){
 }
 function pointSeries(id,weeks,color,name){
   const a=ANALYTICS.players[id];if(!a)return [];
-  return [{name:name+' actual',color,values:weeks.map(w=>a.history.find(h=>h.gameweek===w)?.total_points??null)},
+  const output=[{name:name+' actual',color,values:weeks.map(w=>a.history.find(h=>h.gameweek===w)?.total_points??null)},
           {name:name+' forecast',color,dashed:true,values:weeks.map(w=>a.forecast.find(h=>h.gameweek===w)?.points??null)},
           {name:name+' recorded prediction',color:'#cc7c30',dashed:true,values:weeks.map(w=>(a.recorded_predictions||[]).find(h=>h.gameweek===w)?.predicted??null)}];
+  const evidence=DATA.qualitative?.players?.[id];
+  if(evidence?.experimental_delta){
+    const alternate=(DATA.qualitative_candidate_players||[]).find(p=>p.id===Number(id));
+    output.push({name:name+' qualitative (experimental)',color:'#16866e',dashed:true,values:weeks.map(w=>DATA.manifest.forecast_weeks.includes(w)?alternate?.['gw'+w]??null:(DATA.qualitative.learning?.player_predictions?.[id]||[]).find(p=>p.gameweek===w)?.experimental??null)});
+  }
+  return output;
 }
 function renderAnalytics(){
   if(!$('squadGraphs')||!DATA.ready)return;
@@ -126,6 +135,7 @@ function renderPlayerDetail(){
   });
   $('playerComparisonTable').innerHTML=`<table><thead><tr><th>Player</th><th class="number">Finalized points</th><th class="number">Minutes</th><th class="number">xG</th><th class="number">xA</th><th class="number">xG + xA / 90</th><th class="number">Horizon forecast</th></tr></thead><tbody>${ids.map(id=>{const p=player(id),s=ANALYTICS.players[id]?.summary;return `<tr><td><strong>${esc(p.name)}</strong></td><td class="number">${s?fmt(s.points,0):'—'}</td><td class="number">${s?fmt(s.minutes,0):'—'}</td><td class="number">${s?fmt(s.xg,2):'—'}</td><td class="number">${s?fmt(s.xa,2):'—'}</td><td class="number">${s?.xgi_per90==null?'—':fmt(s.xgi_per90,2)}</td><td class="number">${fmt(p.horizon_points)}</td></tr>`;}).join('')}</tbody></table>`;
   $('analyticsNote').textContent=(ANALYTICS.note||'')+' Comparison table totals cover the whole finalized season; charts use your selected recent window. Hover or focus a chart point for its value.';
+  renderPlayerEvidence(first.id);
 }
 function renderFixtureHeatmap(){
   const weeks=DATA.manifest.forecast_weeks,owned=selected.map(player).filter(Boolean);

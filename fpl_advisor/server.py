@@ -10,7 +10,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from .http import DataError
-from .pipeline import public_team, run, selection, state
+from .pipeline import public_team, run, selection, state, refresh_qualitative, load_config
 from .analytics import player_analytics
 from .rivals import rivals_state, import_rival, edit_rival, refresh_rivals
 
@@ -25,7 +25,7 @@ class Job:
         with self.lock:
             return dict(self.current)
 
-    def start(self):
+    def start(self, evidence_only=False):
         with self.lock:
             if self.current["running"]:
                 return False
@@ -38,10 +38,13 @@ class Job:
 
         def work():
             try:
-                run(self.root, progress=progress)
-                result = refresh_rivals(self.root, progress=progress)
-                if result["errors"]:
-                    progress(f"Player refresh complete; {len(result['errors'])} rival snapshots could not refresh. See Rivals.")
+                if evidence_only:
+                    refresh_qualitative(self.root, progress=progress)
+                else:
+                    run(self.root, progress=progress)
+                    result = refresh_rivals(self.root, progress=progress)
+                    if result["errors"]:
+                        progress(f"Player refresh complete; {len(result['errors'])} rival snapshots could not refresh. See Rivals.")
             except Exception as exc:
                 with self.lock:
                     self.current["error"] = str(exc)
@@ -85,13 +88,21 @@ def make_handler(root, job, port):
                     self.send(200, state(root))
                 elif path == "/api/status":
                     self.send(200, job.status())
-                elif path in ("/app.js", "/charts.js", "/dashboard_features.js", "/style.css"):
+                elif path in ("/app.js", "/charts.js", "/dashboard_features.js", "/qualitative.js", "/style.css"):
                     kind = "text/javascript; charset=utf-8" if path.endswith(".js") else "text/css; charset=utf-8"
                     self.send(200, (root / "fpl_advisor/static" / path[1:]).read_bytes(), kind)
                 elif path == "/api/rivals":
                     self.send(200, rivals_state(root))
                 elif path == "/api/analytics":
                     self.send(200, player_analytics(root))
+                elif path == "/api/qualitative/sources":
+                    from .qual_sources import settings
+                    self.send(200, settings(root))
+                elif path == "/qualitative.json":
+                    self.send(200, state(root).get("qualitative", {}))
+                elif path == "/qualitative-results.csv":
+                    report = root / "reports/qualitative_results.csv"
+                    self.send(200, report.read_bytes(), "text/csv; charset=utf-8") if report.exists() else self.send(404, {"error": "No finalized paired outcomes yet."})
                 elif path == "/forecasts.csv":
                     self.send(200, (root / "reports/player_forecasts.csv").read_bytes(), "text/csv; charset=utf-8")
                 elif path in ("/backtest.csv.gz", "/forecast-results.csv"):
@@ -125,6 +136,15 @@ def make_handler(root, job, port):
                     self.send(200, public_team(root, payload.get("entry_id", "")))
                 elif self.path == "/api/select":
                     self.send(200, selection(root, payload))
+                elif self.path == "/api/qualitative/refresh":
+                    self.send(202, {"started": job.start(evidence_only=True)})
+                elif self.path == "/api/qualitative/sources":
+                    from .qual_sources import save_settings
+                    self.send(200, save_settings(root, payload))
+                elif self.path == "/api/qualitative/import":
+                    from .qual_sources import import_text
+                    self.send(200, import_text(root, payload))
+                    job.start(evidence_only=True)
                 elif self.path == "/api/rivals/import":
                     self.send(200, import_rival(root, payload.get("entry_id", ""),
                                                 own_entry_id=payload.get("own_entry_id")))
@@ -155,9 +175,23 @@ def serve(root, port=8765, open_browser=False, auto_hours=None):
 
         def scheduler():
             job.start()
+            last_interval = time.monotonic()
+            deadline_refreshed = set()
             while True:
-                time.sleep(float(auto_hours) * 3600)
-                job.start()
+                time.sleep(60)
+                if time.monotonic() - last_interval >= float(auto_hours) * 3600:
+                    if job.start():
+                        last_interval = time.monotonic()
+                try:
+                    from .qual_sources import when
+                    current = state(root)
+                    deadline = current.get("manifest", {}).get("deadline")
+                    hours = float(load_config(root).get("predeadline_refresh_hours", 4))
+                    if deadline and 0 < (when(deadline) - datetime.now(timezone.utc)).total_seconds() <= hours * 3600 and deadline not in deadline_refreshed:
+                        if job.start():
+                            deadline_refreshed.add(deadline)
+                except (OSError, ValueError, KeyError):
+                    pass
 
         threading.Thread(target=scheduler, daemon=True).start()
     if open_browser:

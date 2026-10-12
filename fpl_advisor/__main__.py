@@ -17,6 +17,7 @@ def main(argv=None):
     update.add_argument("--offline", action="store_true", help="Use HTTP caches instead of the internet")
     update.add_argument("--cached", action="store_true", help="Use the bundled saved snapshot without refreshing sources")
     update.add_argument("--force-train", action="store_true")
+    update.add_argument("--skip-qualitative", action="store_true", help="Refresh statistical data only; use for public CI")
     ui = subs.add_parser("serve", help="Open the local dashboard")
     ui.add_argument("--port", type=int, default=8765)
     ui.add_argument("--open", action="store_true")
@@ -31,7 +32,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         if args.command == "run":
-            run(args.root, offline=args.offline, cached=args.cached, force=args.force_train, progress=print)
+            run(args.root, offline=args.offline, cached=args.cached, force=args.force_train, progress=print, skip_qualitative=args.skip_qualitative)
         elif args.command == "recommend":
             payload = json.loads(args.team_json.read_text()) if args.team_json else {}
             payload.update({"mode": args.mode, "budget": args.budget, "max_transfers": args.max_transfers})

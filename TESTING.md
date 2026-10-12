@@ -1,4 +1,28 @@
-# Validation of v3
+# Validation of v3.1
+
+## Qualitative extension
+
+Verified locally on 12 October 2026:
+
+- 84 Python contracts cover the existing model/optimizer plus source access failures,
+  timestamps, player attribution, negation/ambiguity, duplicate creators and cited
+  origins, opinion limits, confirmed official next-match absences, contradictory
+  reports, late/cached exclusion, finalized stable-code matching and chronological
+  influence selection. Harmful qualitative influence remains zero.
+- 31 HTTP/DOM checks pass against a temporary synthetic fixture, including source
+  coverage, timestamped player evidence, trends/overlays, both qualitative forecast
+  views, independent rival comparisons, source editing and text imports.
+- Real public-source reads retrieved English captions for two recent FPL videos
+  from each of the four requested channels. RSS posts from r/FantasyPL were readable;
+  comment reads were blocked and reported as incomplete coverage.
+- No finalized prospective qualitative outcomes exist yet. The default learned
+  soft-influence gain is zero. Historical v3 metrics below do not establish the
+  effectiveness of qualitative evidence.
+
+The desktop/mobile browser suite also exercises qualitative controls and source
+tables. Its release CI outcome is recorded after publication.
+
+## Earlier v3 statistical benchmark
 
 Verified 12 October 2026 (Australia/Sydney).
 

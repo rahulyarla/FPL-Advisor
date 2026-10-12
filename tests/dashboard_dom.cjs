@@ -11,7 +11,8 @@ async function main(){
   const check=(name,fn)=>{fn();passed++;console.log('PASS '+name);};
   try{
     await wait(()=>$('analysisPlayer').options.length>0,'dashboard assets and analytics');
-    check('six tabs and loaded forecasts',()=>{assert.equal(d.querySelectorAll('nav button').length,6);assert.equal($('playersBody').rows.length,40);});
+    check('seven tabs and loaded forecasts',()=>{assert.equal(d.querySelectorAll('nav button').length,7);assert.equal($('playersBody').rows.length,40);});
+    check('qualitative mode starts off and coverage is explicit',()=>{assert.equal($('forecastStatsBtn').getAttribute('aria-pressed'),'true');assert.equal($('qualCoverageBody').rows.length,2);assert.match($('qualCoverageBody').textContent,/unavailable/);});
     check('rival comparison is off initially',()=>assert.equal(d.querySelector('.rivalToggle').checked,false));
     $('entryId').value='999';await w.importTeam();
     check('team import populates 15 players',()=>assert.equal($('squadBody').rows.length,15));
@@ -19,7 +20,8 @@ async function main(){
     check('a graph for every squad player',()=>{assert.equal(d.querySelectorAll('.graph-card').length,15);assert.equal(d.querySelectorAll('.graph-card svg').length,15);});
     const ids=[...$('analysisPlayer').options].slice(0,3).map(o=>o.value);
     $('analysisPlayer').value=ids[0];$('comparePlayer1').value=ids[1];$('comparePlayer2').value=ids[2];w.renderPlayerDetail();
-    check('three player comparison and forecast distinction',()=>{assert.equal($('playerComparisonTable').querySelectorAll('tbody tr').length,3);assert.equal($('pointsChart').querySelectorAll('polyline[stroke-dasharray]').length,6);});
+    check('three player comparison and qualitative forecast distinction',()=>{assert.equal($('playerComparisonTable').querySelectorAll('tbody tr').length,3);assert.ok($('pointsChart').querySelectorAll('polyline[stroke-dasharray]').length>=6);assert.match($('pointsChart').textContent,/qualitative \(experimental\)/);});
+    check('player evidence links and trend chart',()=>{assert.ok($('playerEvidence').querySelector('a[href^="https://www.youtube.com/"]'));assert.ok($('playerEvidenceTrend').querySelector('svg'));});
     check('minutes xG xA and accessible values',()=>{for(const id of ['minutesChart','xgChart','xaChart'])assert.ok($(id).querySelector('svg'));assert.ok($('pointsChart').querySelector('circle[aria-label]'));});
     check('fixture heatmap covers all squad players',()=>assert.equal($('fixtureHeatmap').querySelectorAll('tbody tr').length,15));
     w.showTab('checks');
@@ -53,6 +55,19 @@ async function main(){
     check('transfers support rival comparison after confirmation',()=>assert.ok($('teamResultAware')));
     await w.changeRival(1003,false,true);
     check('removal updates and persists saved rivals',()=>assert.equal($('rivalsBody').rows.length,2));
+    w.chooseQualView();
+    check('experimental forecast view is selectable',()=>{assert.equal($('forecastQualBtn').getAttribute('aria-pressed'),'true');assert.match($('qualStatus').textContent,/experimental/);});
+    $('validatedOnly').checked=true;w.chooseQualView();
+    check('validated-only view reports zero initial influence',()=>assert.match($('qualStatus').textContent,/validated influence: 0%/));
+    $('validatedOnly').checked=false;$('compareQualitative').checked=true;w.showTab('team');await w.choose('lineup');
+    check('qualitative and rival comparisons work together',()=>{assert.ok($('teamResultStatsOnly'));assert.ok($('teamResultWithEvidence'));assert.ok($('teamResultEvidencePlanAware'));});
+    w.showQualPlan('teamResult','with_qualitative');
+    check('qualitative comparison button changes the plan',()=>{assert.equal($('teamResultWithEvidence').getAttribute('aria-pressed'),'true');assert.equal($('teamResultEvidencePlanPlan').querySelectorAll('.playercard').length,11);});
+    w.showTab('evidence');await w.loadQualSources();
+    check('source editor loads the four requested creators',()=>{for(const name of ['FPLMate','FPLTom','FPLRaptor','LetsTalkFPL'])assert.ok($('qualSourceList').value.includes(name));});
+    $('qualImportSource').value='Fixture club';$('qualImportDate').value=new Date(Date.now()-3600000).toISOString().slice(0,16);$('qualImportUrl').value='https://www.mancity.com/news/test';$('qualImportText').value='Fixture player 2 will start for the next match.';await w.importEvidence();
+    await wait(()=>$('qualImportStatus').textContent.startsWith('Saved'),'source text import');
+    check('manual evidence import works through the HTTP API',()=>assert.match($('qualImportStatus').textContent,/Saved imported text/));
     check('no uncaught JavaScript errors',()=>assert.deepEqual(errors,[]));
     if(process.env.FPL_DOM_OUTPUT)fs.writeFileSync(process.env.FPL_DOM_OUTPUT,dom.serialize());
     console.log(`${passed} HTTP/DOM smoke checks passed.`);

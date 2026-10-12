@@ -20,7 +20,7 @@ async function main(){
       assert.equal(await page.locator('#playerComparisonTable tbody tr').count(),3);count++;
       assert.equal(await page.locator('#fixtureHeatmap tbody tr').count(),15);count++;
       for(const name of ['pointsChart','minutesChart','xgChart','xaChart'])assert.equal(await page.locator('#'+name+' svg').count(),1);count++;
-      assert.equal(await page.locator('#pointsChart polyline[stroke-dasharray]').count(),6);count++;
+      assert.ok(await page.locator('#pointsChart polyline[stroke-dasharray]').count()>=6);count++;
       await page.getByRole('button',{name:'Model checks',exact:true}).click();
       assert.equal(await page.locator('#checksBody tr').count(),4);assert.match(await page.locator('#dataCoverage').textContent(),/development predictions/);count++;
       assert.equal(await page.locator('#feedbackChart svg').count(),1);assert.equal(await page.locator('#feedbackTableBody tr').count(),2);count++;
@@ -38,6 +38,15 @@ async function main(){
       assert.equal(await page.locator('#teamResultPlan .playercard').count(),11);count++;
       const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);assert.equal(overflow,false);count++;
       const tooSmall=await page.locator('svg').evaluateAll(nodes=>nodes.filter(n=>{const r=n.getBoundingClientRect();return r.width>0&&r.width<100;}).length);assert.equal(tooSmall,0);count++;
+      await page.locator('#compareQualitative').check();await page.getByRole('button',{name:'Best XI & captain',exact:true}).click();
+      await page.locator('#teamResultWithEvidence').waitFor();await page.locator('#teamResultWithEvidence').click();
+      assert.equal(await page.locator('#teamResultWithEvidence').getAttribute('aria-pressed'),'true');count++;
+      assert.equal(await page.locator('#teamResultEvidencePlanPlan .playercard').count(),11);count++;
+      await page.getByRole('button',{name:'News & expert views',exact:true}).click();
+      assert.equal(await page.locator('#qualCoverageBody tr').count(),2);count++;
+      await page.waitForFunction(()=>document.getElementById('qualSourceList').value.includes('FPLTom'));count++;
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);count++;
+      await page.screenshot({path:`test-artifacts/qualitative-${viewport.width}.png`,fullPage:true});
       assert.deepEqual(errors,[]);count++;
       console.log(`PASS browser viewport ${viewport.width}x${viewport.height}`);await page.close();
     }

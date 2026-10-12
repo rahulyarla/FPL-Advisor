@@ -20,6 +20,7 @@ from fpl_advisor import server, pipeline
 from fpl_advisor.analytics import build_analytics
 from fpl_advisor.http import write_json, utc_now
 from fpl_advisor.selection import optimize
+from fpl_advisor.qualitative import evidence, apply_evidence
 from test_contracts import player_pool, record
 
 
@@ -39,6 +40,7 @@ def main():
                             "fixtures6": "Fixture (H)", "fixtures7": "Fixture (A)", "games6": 1, "games7": 1}.items():
             frame[name] = value
         frame["full_name"] = "Fixture player " + frame.id.astype(str)
+        frame["code"] = frame.id + 100
         frame["next_points"] = frame.gw6
         frame["horizon_points"] = frame.gw6+frame.gw7
         frame["weighted_points"] = frame.gw6+.8*frame.gw7
@@ -66,6 +68,21 @@ def main():
         write_json(root / "data/bootstrap.json", {})
         history = pd.DataFrame([{**record(i,gw,3+(i+gw)%8,season="2026-27"),"expected_goals":.3,"expected_assists":.2}
                                 for i in frame.id for gw in range(1,6)])
+        history.to_csv(root / "data/history.csv.gz",index=False,compression="gzip")
+        write_json(root / "data/fixtures.json",{})
+        write_json(root / "data/manifest.json",manifest)
+        import fpl_advisor.qualitative as qualitative
+        from fpl_advisor.qual_sources import imports
+        docs=[{"id":"fixture1","source":"Fixture creator","kind":"youtube","url":"https://www.youtube.com/watch?v=abcdefghijk",
+               "title":"Synthetic FPL GW6","text":"Fixture player 1 is a great pick.","coverage":"transcript","published_at":utc_now(),"fetched_at":utc_now()}]
+        def fake_collect(root_path,progress=None,online=True):
+            return {"documents":[*docs,*imports(root_path)],"settings":{"lookback_days":7},"coverage":[{"source":"Fixture creator","kind":"youtube","items":1,"transcripts":1,"status":"transcripts","details":[]},{"source":"Fixture blocked source","items":0,"status":"unavailable","details":[{"reason":"Synthetic unavailable coverage"}]}]}
+        qualitative.collect=fake_collect
+        q=evidence(fake_collect(root),frame.to_dict("records"),manifest)
+        candidates,learned=apply_evidence(frame.to_dict("records"),[6,7],q)
+        q["learning"]={"status":"Synthetic fixture: no finalized paired results.","recommended_gain":0,"gameweeks":[]}
+        write_json(root / "reports/snapshot.json", {"manifest":manifest,"players":frame.to_dict("records"),"validation":validation,"feedback":feedback,
+                                                  "qualitative":q,"qualitative_candidate_players":candidates,"qualitative_learned_players":learned})
         analytics=build_analytics(history,frame,manifest)
         for p in analytics["players"].values():
             p["recorded_predictions"]=[{"gameweek":h["gameweek"],"predicted":h["total_points"]-.2} for h in p["history"] if h["gameweek"] in [4,5]]

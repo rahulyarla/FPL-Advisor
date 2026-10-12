@@ -1,4 +1,35 @@
-# FPL Advisor v3
+# FPL Advisor v3.1
+
+## New: YouTube, Reddit and qualitative evidence
+
+Recent public text from FPL Mate, FPL Tom, FPL Raptor, Let's Talk FPL and
+r/FantasyPL can now inform an optional forecast version. The app retrieves available
+English video captions, records timestamped player claims and shows source coverage.
+The **News & expert views** tab includes sources, disagreements, experimental point
+changes, paired live results and a text/transcript importer.
+
+1. Click **Refresh evidence**. Check the coverage table on **News & expert views**.
+2. Use **Stats only** or **Stats + qualitative** at the top of the dashboard.
+3. Check **Build both versions** to compare two teams, captains, transfers or wildcards.
+4. Open a player for source passages, video timestamps, evidence trends and the
+   experimental forecast overlay. Rival comparisons work within both versions.
+5. **Use only influence that has passed later-gameweek validation** keeps soft
+   effects at zero until enough genuine results support them. Fresh official reports
+   explicitly ruling a player out of the next match still apply in qualitative views.
+
+This layer uses conservative phrase extraction. It can miss ambiguous language;
+the review panel shows withheld passages. Qualitative influence is experimental,
+and no new accuracy improvement is claimed before prospective evaluation.
+The four creator channels returned captions during a genuine access check. Reddit
+posts were readable; comment access was limited and is labeled in the dashboard.
+Automatic access can change. Import actual source text when a transcript or public
+discussion is unavailable. No paid AI service or API key is needed for public-caption
+and RSS reads. An approved Reddit OAuth token is optional.
+
+Read [QUALITATIVE_MODEL.md](QUALITATIVE_MODEL.md) for extraction limits, confidence
+weights, forecast bounds, the official-injury exception, learning gates and storage.
+Close an older copy, download the complete updated ZIP and launch **START_WINDOWS.bat**.
+Preserve your `user/`, `data/forecast_archive/` and `data/qualitative_archive/` folders.
 
 A working local FPL dashboard with trained player forecasts, a best XI and captain,
 transfer comparisons, and a wildcard builder. It follows the position-specific
@@ -54,7 +85,8 @@ Close the old adviser's command window first. Download this repository with
 folder, and double-click **START_WINDOWS.bat**. Your saved squad uses the same
 browser address and season. If updating a v2 copy that already has saved rivals,
 copy its `user/` folder and `data/forecast_archive/` folder into the new project before starting it. The forecast archive preserves your accuracy history. Never upload
-that folder to GitHub.
+the `user/` folder or private report exports to GitHub. Public player forecast ledgers
+contain no entry IDs or private squad information.
 
 ## Start on Windows
 

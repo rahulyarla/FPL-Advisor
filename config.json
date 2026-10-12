@@ -12,5 +12,7 @@
   "scenario_samples": 5000,
   "model_search": "standard",
   "feedback_min_gameweeks": 3,
-  "external_team_xg": true
+  "external_team_xg": true,
+  "qualitative_enabled": true,
+  "predeadline_refresh_hours": 4
 }
