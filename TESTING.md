@@ -45,9 +45,15 @@ Production verification:
 
 ## Desktop/mobile CI
 
-The current workflow is configured to run 61 Python contracts on Linux/Python 3.12 and Windows/Python 3.13, 23 HTTP/DOM checks and 30 Chromium checks at 1440×1000 and 390×844. The browser suite includes v3 comparison/error views, archived prediction lines, graphs, rival comparison switching and page-width checks. Screenshots of Model checks are saved as a CI artifact. A configured check is not claimed as passed until its run completes.
+[GitHub Actions run 38198739791](https://github.com/rahulyarla/FPL-Advisor/actions/runs/38198739791) **passed** for implementation commit `2cba585f5875574a218078f3d388c387b9169bdd`:
 
-The prior v2 [Actions run 38187325069](https://github.com/rahulyarla/FPL-Advisor/actions/runs/38187325069) passed its 39 Python, 20 DOM and 22 browser checks; that evidence does not substitute for running the new suite. Local Chromium download was unavailable, so the GitHub runner supplies current desktop/mobile browser verification.
+- 61 Python contracts passed on Linux/Python 3.12 and Windows/Python 3.13.
+- 23 HTTP/DOM dashboard checks passed.
+- 30 Chromium checks passed at desktop 1440×1000 and mobile 390×844, including v3 model comparisons, finalized-GW error charts, recorded forecast overlays, retained rival flows and page-width checks.
+
+The captured desktop/mobile Model checks screenshots were visually checked in this session. They use the synthetic test fixture, not claimed live prediction results. On mobile, wide metric tables scroll within their panels; the page itself stays within the viewport. The two images are available in the run's `dashboard-screenshots` artifact.
+
+Local Chromium download was unavailable; the successful GitHub runner supplied browser verification. The workflow continues to run these checks for source updates. No FPL password or personal squad is involved in these tests.
 
 ## Reproduce
 
