@@ -45,9 +45,15 @@ Production check result:
 
 ## Rendering and CI
 
+[GitHub Actions run 38187325069](https://github.com/rahulyarla/FPL-Advisor/actions/runs/38187325069) **passed** for implementation commit `82e201313703069e1bc5c8fe88cb5075e8914469`:
+
+- 39 Python contracts passed on Linux/Python 3.12 and Windows/Python 3.13.
+- 20 HTTP/DOM dashboard checks passed.
+- 22 Chromium checks passed at desktop 1440×1000 and mobile 390×844, including graphs, comparisons, rival imports, version switching and page-width checks.
+
 Local Chromium installation was blocked by a failed/truncated browser download.
-The HTTP/DOM checks verify interaction logic and SVG structure; they do not
-establish pixel-perfect browser rendering.
+The successful GitHub runner supplied the actual browser verification. These
+are automated checks, not a claim of a separate human pixel-perfect review.
 
 `.github/workflows/test.yml` runs the contracts on Linux/Python 3.12 and
 Windows/Python 3.13, then the DOM checks and `dashboard_browser.cjs` in Chromium
