@@ -22,7 +22,7 @@ import pandas as pd
 from .http import utc_now, write_json
 from .qual_sources import collect, plain, when, official_url
 
-VERSION = "qualitative-v1.0"
+VERSION = "qualitative-v1.1"
 _LOCK = threading.RLock()
 RULES = [
     ("injury_out", -1, r"\b(?:ruled out|will not play|won't play|will miss|unavailable for|suspended for)\b"),
@@ -162,7 +162,7 @@ def evidence(capture, players, manifest, clock=None):
                         "coverage": doc.get("coverage"), "stale": stale, "usable": usable, "reported_claim": bool(REFERENCE.search(text)),
                         "official": doc["kind"] == "official" and official_url(doc["url"]),
                         "new_since_stats": published >= when(manifest["created_at"]),
-                        "current_out": bool(re.search(r"\b(?:next (?:match|game|fixture)|GW\s*" + str(manifest["next_gameweek"]) + r"|gameweek\s*" + str(manifest["next_gameweek"]) + r")\b", text, re.I))}
+                        "current_out": bool(re.search(r"\b(?:next Premier League (?:match|game|fixture)|GW\s*" + str(manifest["next_gameweek"]) + r"|gameweek\s*" + str(manifest["next_gameweek"]) + r")\b", text, re.I))}
                 item["id"] = hashlib.sha256(json.dumps({k: item[k] for k in ("player_id", "kind", "url", "excerpt", "timestamp")}, sort_keys=True).encode()).hexdigest()[:20]
                 facts.append(item)
     return {"version": VERSION, "as_of": now.isoformat(), "signals": facts, "review": rejected[:100], "duplicates_removed": duplicates,

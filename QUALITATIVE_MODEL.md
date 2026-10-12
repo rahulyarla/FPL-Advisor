@@ -95,10 +95,11 @@ roles and set pieces receive an additional small effect; conflicting roles withh
 it. The combined soft change is capped at -20%/+10% of next-GW points.
 
 There is one factual exception: an official report published after the statistical
-snapshot, explicitly ruling the player out of the next match/current GW, with
+snapshot, explicitly ruling the player out of the next Premier League match/current GW, with
 weight >=0.50 sets qualitative-view next-GW points and expected minutes to zero.
 The latest official fitness/starting report takes precedence. This constraint is
 excluded from soft-influence tuning. It does not infer a recovery date.
+Generic next-match absences do not force zero points, because they may refer to a cup match.
 
 Captain recommendations, price-rise/fall discussion and disagreements remain
 visible context. Price discussion is not a price-prediction model. Minutes displayed

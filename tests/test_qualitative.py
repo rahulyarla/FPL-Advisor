@@ -108,14 +108,14 @@ class QualitativeContracts(unittest.TestCase):
 
     def test_fresh_official_next_match_absence_is_a_constraint(self):
         published=(self.now-timedelta(minutes=20)).isoformat()
-        doc=self.doc("Haaland is ruled out for the next match.",kind="official",url="https://www.mancity.com/news/report",published_at=published)
+        doc=self.doc("Haaland is ruled out for the next Premier League match.",kind="official",url="https://www.mancity.com/news/report",published_at=published)
         result=self.extract([doc]);candidate,learned=apply_evidence(self.players,[6,7],result)
         self.assertEqual(candidate[0]['gw6'],0);self.assertEqual(learned[0]['gw6'],0)
         self.assertEqual(candidate[0]['gw7'],7)
         self.assertEqual(result['players']['1']['expected_minutes_proxy'],0)
 
     def test_old_or_unspecified_official_absence_cannot_force_zero(self):
-        for doc in [self.doc("Haaland is ruled out.",kind="official",url="https://www.mancity.com/news/report"),self.doc("Haaland is ruled out for the next match.",kind="official",url="https://www.mancity.com/news/report")]:
+        for doc in [self.doc("Haaland is ruled out.",kind="official",url="https://www.mancity.com/news/report"),self.doc("Haaland is ruled out for the next match.",kind="official",url="https://www.mancity.com/news/report",published_at=(self.now-timedelta(minutes=5)).isoformat()),self.doc("Haaland is ruled out for the next Premier League match.",kind="official",url="https://www.mancity.com/news/report")]:
             result=self.extract([doc]);candidate,_=apply_evidence(self.players,[6,7],result)
             self.assertGreater(candidate[0]['gw6'],0)
 
@@ -155,7 +155,7 @@ class QualitativeContracts(unittest.TestCase):
                 linked_official('https://www.mancity.com/news/report',self.now)
 
     def test_later_official_fitness_update_cancels_previous_forced_absence(self):
-        docs=[self.doc('Haaland is ruled out for the next match.',kind='official',url='https://www.mancity.com/news/a',published_at=(self.now-timedelta(minutes=30)).isoformat()),
+        docs=[self.doc('Haaland is ruled out for the next Premier League match.',kind='official',url='https://www.mancity.com/news/a',published_at=(self.now-timedelta(minutes=30)).isoformat()),
               self.doc('Haaland is cleared to play.',kind='official',url='https://www.mancity.com/news/b',published_at=(self.now-timedelta(minutes=5)).isoformat())]
         result=self.extract(docs);candidate,_=apply_evidence(self.players,[6,7],result)
         self.assertGreater(candidate[0]['gw6'],0);self.assertFalse(result['players']['1']['hard_out'])
