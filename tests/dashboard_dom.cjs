@@ -19,9 +19,14 @@ async function main(){
     check('a graph for every squad player',()=>{assert.equal(d.querySelectorAll('.graph-card').length,15);assert.equal(d.querySelectorAll('.graph-card svg').length,15);});
     const ids=[...$('analysisPlayer').options].slice(0,3).map(o=>o.value);
     $('analysisPlayer').value=ids[0];$('comparePlayer1').value=ids[1];$('comparePlayer2').value=ids[2];w.renderPlayerDetail();
-    check('three player comparison and forecast distinction',()=>{assert.equal($('playerComparisonTable').querySelectorAll('tbody tr').length,3);assert.equal($('pointsChart').querySelectorAll('polyline[stroke-dasharray]').length,3);});
+    check('three player comparison and forecast distinction',()=>{assert.equal($('playerComparisonTable').querySelectorAll('tbody tr').length,3);assert.equal($('pointsChart').querySelectorAll('polyline[stroke-dasharray]').length,6);});
     check('minutes xG xA and accessible values',()=>{for(const id of ['minutesChart','xgChart','xaChart'])assert.ok($(id).querySelector('svg'));assert.ok($('pointsChart').querySelector('circle[aria-label]'));});
     check('fixture heatmap covers all squad players',()=>assert.equal($('fixtureHeatmap').querySelectorAll('tbody tr').length,15));
+    w.showTab('checks');
+    check('v3 model comparison and development coverage',()=>{assert.equal($('checksBody').rows.length,4);assert.match($('dataCoverage').textContent,/development predictions/);assert.match($('aggregateAccuracy').textContent,/GB reference/);});
+    check('live error chart and finalized GW metrics',()=>{assert.ok($('feedbackChart').querySelector('svg'));assert.equal($('feedbackTableBody').rows.length,2);assert.match($('learningStatus').textContent,/third finalized/);});
+    const backtest=await fetch(base+'/backtest.csv.gz'),liveResults=await fetch(base+'/forecast-results.csv');
+    check('historical and live result downloads',()=>{assert.equal(backtest.status,200);assert.equal(liveResults.status,200);assert.equal(backtest.headers.get('Content-Type'),'application/gzip');});
     $('rivalIds').value='999';await w.addRivals();
     check('own entry cannot be added as rival',()=>assert.match($('errorBox').textContent,/own entry/));
     $('rivalIds').value='1001, 1002\nhttps://fantasy.premierleague.com/entry/1003/\n1001';await w.addRivals();

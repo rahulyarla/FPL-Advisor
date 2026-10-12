@@ -1,0 +1,14 @@
+{
+  "created_at": "2026-10-12T01:28:54.260375+00:00",
+  "matched_forecasts": 0,
+  "warnings": [],
+  "model_family": "feedback-ensemble-v3.0",
+  "correction_gain": 0.0,
+  "corrections": {},
+  "positions": {},
+  "gameweeks": [],
+  "player_predictions": {},
+  "evaluated_gameweeks": [],
+  "status": "Waiting for finalized outcomes of forecasts saved before deadlines.",
+  "policy": "Latest pre-deadline snapshot per origin GW. Match finalized actuals by season, ID and code. Learn only from one-GW forecasts of this model family; validate corrections on later GWs."
+}

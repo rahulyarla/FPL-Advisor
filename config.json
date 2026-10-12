@@ -1,6 +1,6 @@
 {
   "historical_seasons": "auto",
-  "history_seasons_to_use": 3,
+  "history_seasons_to_use": 8,
   "vaastav_repository": "vaastav/Fantasy-Premier-League",
   "vaastav_ref": "master",
   "horizon": 5,
@@ -9,5 +9,8 @@
   "entry_id": null,
   "request_timeout": 40,
   "solver_seconds": 30,
-  "scenario_samples": 5000
+  "scenario_samples": 5000,
+  "model_search": "standard",
+  "feedback_min_gameweeks": 3,
+  "external_team_xg": true
 }

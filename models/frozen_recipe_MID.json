@@ -1,0 +1,32 @@
+{
+  "created_at": "2026-10-12T01:15:59.413253+00:00",
+  "model_version": "feedback-ensemble-v3.0",
+  "test_season": "2025-26",
+  "recipe": {
+    "components": [
+      "hurdle",
+      "ridge_recent"
+    ],
+    "weights": [
+      0.5,
+      0.5
+    ],
+    "calibration_gain": 0,
+    "objective": 2.696198122074716,
+    "all_players": {
+      "rows": 18640,
+      "rmse": 1.9225680970318293,
+      "mae": 0.9690820636489699
+    },
+    "regular_players": {
+      "rows": 5417,
+      "rmse": 2.954074797089011,
+      "mae": 2.0184074326328183
+    }
+  },
+  "development_bias": {
+    "regular": 0.004933566334913109,
+    "rotation": -0.01800808819598556,
+    "limited": -0.019331837962784156
+  }
+}

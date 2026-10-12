@@ -50,3 +50,9 @@ jobs:
           python -c "import time,urllib.request; time.sleep(3); urllib.request.urlopen('http://127.0.0.1:8877/api/state').read()"
           node tests/dashboard_dom.cjs
           node tests/dashboard_browser.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dashboard-screenshots
+          path: test-artifacts/
+          retention-days: 14

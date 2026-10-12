@@ -10,6 +10,7 @@ import tempfile
 import shutil
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
+import gzip
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -48,12 +49,29 @@ def main():
                       "test_regular_players":{"rmse":2.0,"rows":100},"training_rows":1000,
                       "blocks":[{"role":"test","regular_players":{"form_baseline":{"rmse":3.0}}}]}
                       for pos in ["GK","DEF","MID","FWD"]}}
+        # Representative v3 UI data, explicitly synthetic and never an evaluated real forecast.
+        validation.update({"model_version":"feedback-ensemble-v3.0", "validation_policy":"Fixture: rolling development followed by a separate full-season historical test.",
+                           "seasons":{"2023-24":1000,"2024-25":1000,"2025-26":1000,"2026-27":200},
+                           "rows":3200,"development_rows":400,"test_rows":400,"feature_count":82,"candidate_count":8,
+                           "aggregate_test_regular":{"selected":{"rmse":2.0},"legacy":{"rmse":2.1},"baseline":{"rmse":3.0}}})
+        for result in validation["positions"].values():
+            result.update({"selected_method":"adaptive_ensemble","recipe":{"components":["ridge_recent","hurdle"],"weights":[.5,.5]},
+                           "test_legacy_regular_players":{"rmse":2.1},"test_baseline_regular_players":{"rmse":3.0}})
+            result["test_regular_players"]["mae"]=1.5
+        feedback = {"model_family":"feedback-ensemble-v3.0", "correction_gain":0,"matched_forecasts":80,
+                    "status":"Synthetic test fixture: waiting for a third finalized GW before a live correction can be checked.",
+                    "gameweeks":[{"model_family":"feedback-ensemble-v3.0","gameweek":w,"lead":1,"rows":40,"rmse":2.0,"mae":1.5,"mean_error":.2} for w in [4,5]]}
         write_json(root / "config.json", {"horizon":2,"discount":.8,"solver_seconds":5,"scenario_samples":500})
-        write_json(root / "reports/snapshot.json", {"manifest":manifest,"players":frame.to_dict("records"),"validation":validation})
+        write_json(root / "reports/snapshot.json", {"manifest":manifest,"players":frame.to_dict("records"),"validation":validation,"feedback":feedback})
         write_json(root / "data/bootstrap.json", {})
         history = pd.DataFrame([{**record(i,gw,3+(i+gw)%8,season="2026-27"),"expected_goals":.3,"expected_assists":.2}
                                 for i in frame.id for gw in range(1,6)])
-        write_json(root / "reports/player_analytics.json", build_analytics(history,frame,manifest))
+        analytics=build_analytics(history,frame,manifest)
+        for p in analytics["players"].values():
+            p["recorded_predictions"]=[{"gameweek":h["gameweek"],"predicted":h["total_points"]-.2} for h in p["history"] if h["gameweek"] in [4,5]]
+        write_json(root / "reports/player_analytics.json", analytics)
+        (root/'reports/backtest_predictions.csv.gz').write_bytes(gzip.compress(b'season,gw,prediction,actual\n2025-26,1,4,5\n'))
+        (root/'reports/forecast_results.csv').write_text('season,gw,prediction,actual\n2026-27,4,4,5\n')
         squad = optimize(frame,[6,7],budget=80,seconds=5)["squad"]
 
         def fake_import(root_path, entry_id):

@@ -101,7 +101,8 @@ function chartWeeks(ids){
 function pointSeries(id,weeks,color,name){
   const a=ANALYTICS.players[id];if(!a)return [];
   return [{name:name+' actual',color,values:weeks.map(w=>a.history.find(h=>h.gameweek===w)?.total_points??null)},
-          {name:name+' forecast',color,dashed:true,values:weeks.map(w=>a.forecast.find(h=>h.gameweek===w)?.points??null)}];
+          {name:name+' forecast',color,dashed:true,values:weeks.map(w=>a.forecast.find(h=>h.gameweek===w)?.points??null)},
+          {name:name+' recorded prediction',color:'#cc7c30',dashed:true,values:weeks.map(w=>(a.recorded_predictions||[]).find(h=>h.gameweek===w)?.predicted??null)}];
 }
 function renderAnalytics(){
   if(!$('squadGraphs')||!DATA.ready)return;

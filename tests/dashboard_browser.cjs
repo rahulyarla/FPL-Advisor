@@ -1,5 +1,6 @@
 /* Browser checks against dashboard_fixture.py. npm install --no-save playwright */
 const assert=require('node:assert/strict');
+const fs=require('node:fs');
 const {chromium}=require(process.env.FPL_PLAYWRIGHT_MODULE||'playwright');
 async function main(){
   const browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
@@ -19,6 +20,13 @@ async function main(){
       assert.equal(await page.locator('#playerComparisonTable tbody tr').count(),3);count++;
       assert.equal(await page.locator('#fixtureHeatmap tbody tr').count(),15);count++;
       for(const name of ['pointsChart','minutesChart','xgChart','xaChart'])assert.equal(await page.locator('#'+name+' svg').count(),1);count++;
+      assert.equal(await page.locator('#pointsChart polyline[stroke-dasharray]').count(),6);count++;
+      await page.getByRole('button',{name:'Model checks',exact:true}).click();
+      assert.equal(await page.locator('#checksBody tr').count(),4);assert.match(await page.locator('#dataCoverage').textContent(),/development predictions/);count++;
+      assert.equal(await page.locator('#feedbackChart svg').count(),1);assert.equal(await page.locator('#feedbackTableBody tr').count(),2);count++;
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);count++;
+      fs.mkdirSync('test-artifacts',{recursive:true});
+      await page.screenshot({path:`test-artifacts/model-checks-${viewport.width}.png`,fullPage:true});
       await page.getByRole('button',{name:/^Rivals /}).click();
       await page.locator('#rivalIds').fill('1001\n1002\nhttps://fantasy.premierleague.com/entry/1003/');await page.locator('#addRivalsBtn').click();
       await page.waitForFunction(()=>!document.getElementById('addRivalsBtn').disabled);

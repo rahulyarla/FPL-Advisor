@@ -1,604 +1,2706 @@
 {
-  "created_at": "2026-10-03T00:44:39.942984+00:00",
+  "created_at": "2026-10-12T01:13:01.836226+00:00",
+  "model_version": "feedback-ensemble-v3.0",
+  "feature_version": "deadline-safe-gw-v3",
   "validation_season": "2025-26",
-  "validation_policy": "Train strictly before each block; select on GW21-32; test on GW33-38.",
+  "test_season": "2025-26",
+  "rows": 202738,
+  "seasons": {
+    "2018-19": 21134,
+    "2019-20": 22313,
+    "2020-21": 22889,
+    "2021-22": 23230,
+    "2022-23": 24957,
+    "2023-24": 28742,
+    "2024-25": 26919,
+    "2025-26": 29338,
+    "2026-27": 3216
+  },
+  "validation_policy": "Four rolling development blocks across two seasons; freeze the recipe; test all 38 GWs of the following season in three forward blocks. Refit production on all finalized results.",
   "regular_player_definition": "Pre-game rolling three-fixture average minutes >=45.",
-  "target": "Points per scheduled fixture (GW totals are divided by fixture count).",
-  "feature_version": "deadline-safe-gw-v1",
-  "rows": 88215,
+  "target": "Points per scheduled fixture; player-GW totals are also evaluated.",
+  "selection_objective": "75% regular-player RMSE + 25% all-player RMSE; chronological residual calibration.",
+  "legacy_reference_policy": "FPL-Auto/v2 gradient boosting parameters, refitted on each fold's latest three available seasons and the expanded lag history. This is an estimator reference, not the previous saved model's predictions.",
+  "search": "standard",
+  "candidate_count": 8,
+  "feature_count": 82,
   "positions": {
     "GK": {
-      "selected_method": "gradient_boosting",
-      "development_rmse_ml": 2.776391386475735,
-      "development_rmse_baseline": 3.000943995230305,
+      "selected_method": "adaptive_ensemble",
+      "recipe": {
+        "components": [
+          "ridge_recent",
+          "hurdle"
+        ],
+        "weights": [
+          0.5,
+          0.5
+        ],
+        "calibration_gain": 0,
+        "objective": 2.4183675702634395,
+        "all_players": {
+          "rows": 4544,
+          "rmse": 1.4945761402826236,
+          "mae": 0.6828441646972235
+        },
+        "regular_players": {
+          "rows": 1125,
+          "rmse": 2.7262980469237115,
+          "mae": 2.0833472552386274
+        }
+      },
+      "leaderboard": [
+        {
+          "components": [
+            "ridge_recent",
+            "hurdle"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 0,
+          "objective": 2.4183675702634395,
+          "all_players": {
+            "rows": 4544,
+            "rmse": 1.4945761402826236,
+            "mae": 0.6828441646972235
+          },
+          "regular_players": {
+            "rows": 1125,
+            "rmse": 2.7262980469237115,
+            "mae": 2.0833472552386274
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hurdle"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 0.5,
+          "objective": 2.4187830472330156,
+          "all_players": {
+            "rows": 4544,
+            "rmse": 1.4947081774642637,
+            "mae": 0.6762828682655111
+          },
+          "regular_players": {
+            "rows": 1125,
+            "rmse": 2.7268080038226,
+            "mae": 2.0750283557493545
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hurdle"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 1,
+          "objective": 2.4195047641229452,
+          "all_players": {
+            "rows": 4544,
+            "rmse": 1.4950355480245636,
+            "mae": 0.6704765174608242
+          },
+          "regular_players": {
+            "rows": 1125,
+            "rmse": 2.727661169489072,
+            "mae": 2.0670918677697823
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hurdle"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 0,
+          "objective": 2.4209422010469837,
+          "all_players": {
+            "rows": 4544,
+            "rmse": 1.4965279531931968,
+            "mae": 0.6866309493205558
+          },
+          "regular_players": {
+            "rows": 1125,
+            "rmse": 2.729080283664912,
+            "mae": 2.083054501002361
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hurdle"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 0.5,
+          "objective": 2.421409494605429,
+          "all_players": {
+            "rows": 4544,
+            "rmse": 1.496686205797497,
+            "mae": 0.6797471607822659
+          },
+          "regular_players": {
+            "rows": 1125,
+            "rmse": 2.72965059087474,
+            "mae": 2.074556118551822
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hist_smooth"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 0,
+          "objective": 2.42174401624167,
+          "all_players": {
+            "rows": 4544,
+            "rmse": 1.496988465207658,
+            "mae": 0.6800336545712334
+          },
+          "regular_players": {
+            "rows": 1125,
+            "rmse": 2.729995866586341,
+            "mae": 2.076056894163579
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hurdle"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 1,
+          "objective": 2.4222312389201357,
+          "all_players": {
+            "rows": 4544,
+            "rmse": 1.4970538532479423,
+            "mae": 0.6736065531671172
+          },
+          "regular_players": {
+            "rows": 1125,
+            "rmse": 2.7306237008108667,
+            "mae": 2.066299970314331
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hist_smooth"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 0.5,
+          "objective": 2.4223254801410175,
+          "all_players": {
+            "rows": 4544,
+            "rmse": 1.4971953056080527,
+            "mae": 0.6738575207224424
+          },
+          "regular_players": {
+            "rows": 1125,
+            "rmse": 2.7307022049853393,
+            "mae": 2.067539030543094
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hist_smooth"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 1,
+          "objective": 2.4232520548120795,
+          "all_players": {
+            "rows": 4544,
+            "rmse": 1.4976283360629705,
+            "mae": 0.667854779704152
+          },
+          "regular_players": {
+            "rows": 1125,
+            "rmse": 2.731793294395116,
+            "mae": 2.0593203302474907
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hist_smooth"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 0,
+          "objective": 2.424127882398063,
+          "all_players": {
+            "rows": 4544,
+            "rmse": 1.4985720850445237,
+            "mae": 0.6854438474815042
+          },
+          "regular_players": {
+            "rows": 1125,
+            "rmse": 2.7326464815159093,
+            "mae": 2.08008346556892
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hurdle"
+          ],
+          "weights": [
+            0.25,
+            0.75
+          ],
+          "calibration_gain": 0,
+          "objective": 2.4241902070209953,
+          "all_players": {
+            "rows": 4544,
+            "rmse": 1.4975629652053681,
+            "mae": 0.6807379710189783
+          },
+          "regular_players": {
+            "rows": 1125,
+            "rmse": 2.7330659542928712,
+            "mae": 2.0894742109149522
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hurdle"
+          ],
+          "weights": [
+            0.25,
+            0.75
+          ],
+          "calibration_gain": 0.5,
+          "objective": 2.4245585843843354,
+          "all_players": {
+            "rows": 4544,
+            "rmse": 1.4976630922825982,
+            "mae": 0.6750650044740727
+          },
+          "regular_players": {
+            "rows": 1125,
+            "rmse": 2.7335237484182473,
+            "mae": 2.082354111912378
+          }
+        }
+      ],
+      "development_rmse_ml": 2.7262980469237115,
+      "development_rmse_baseline": 3.005944610845686,
+      "development_rows": 4544,
       "test_all_players": {
-        "rows": 550,
-        "rmse": 1.2107162072420896,
-        "mae": 0.5457015070106056
+        "rows": 3383,
+        "rmse": 1.3962789783052978,
+        "mae": 0.5963928298439579
       },
       "test_regular_players": {
-        "rows": 114,
-        "rmse": 2.517528275248518,
-        "mae": 1.9771786101326259
+        "rows": 748,
+        "rmse": 2.6585031450916654,
+        "mae": 2.058501968457508
       },
+      "test_legacy_all_players": {
+        "rows": 3383,
+        "rmse": 1.41047783123166,
+        "mae": 0.6026629940140265
+      },
+      "test_legacy_regular_players": {
+        "rows": 748,
+        "rmse": 2.6890433744207067,
+        "mae": 2.0810201118616574
+      },
+      "test_baseline_all_players": {
+        "rows": 3383,
+        "rmse": 1.5220732747405963,
+        "mae": 0.6145081854356478
+      },
+      "test_baseline_regular_players": {
+        "rows": 748,
+        "rmse": 2.9129855866671517,
+        "mae": 2.2553821301247767
+      },
+      "test_gameweek_totals": {
+        "rows": 3383,
+        "rmse": 1.4093937890168458,
+        "mae": 0.6019421532731088
+      },
+      "test_gameweek_regular_players": {
+        "rows": 748,
+        "rmse": 2.689443564474434,
+        "mae": 2.081230051777269
+      },
+      "rmse_change_vs_legacy_percent": -1.1357284013918334,
       "blocks": [
         {
-          "start_gw": 21,
-          "end_gw": 26,
+          "season": "2023-24",
+          "start_gw": 20,
+          "end_gw": 38,
           "role": "development",
+          "train_before": 202320,
           "all_players": {
+            "selected_ensemble": {
+              "rows": 1717,
+              "rmse": 1.3360732004823976,
+              "mae": 0.5846272481204154
+            },
             "gradient_boosting": {
-              "rows": 555,
-              "rmse": 1.431076470322083,
-              "mae": 0.5748367255688722
+              "rows": 1717,
+              "rmse": 1.3672370528666922,
+              "mae": 0.5773816429362988
             },
             "form_baseline": {
-              "rows": 555,
-              "rmse": 1.555852577737086,
-              "mae": 0.6002123990631824
+              "rows": 1717,
+              "rmse": 1.4753661872875543,
+              "mae": 0.5899621142787214
             }
           },
           "regular_players": {
+            "selected_ensemble": {
+              "rows": 370,
+              "rmse": 2.646238291232937,
+              "mae": 2.067455606565447
+            },
             "gradient_boosting": {
-              "rows": 120,
-              "rmse": 2.726541133633166,
-              "mae": 2.093735958933953
+              "rows": 370,
+              "rmse": 2.7064046582876196,
+              "mae": 2.088264022219785
             },
             "form_baseline": {
-              "rows": 120,
-              "rmse": 2.9842975193548944,
-              "mae": 2.349861111111111
+              "rows": 370,
+              "rmse": 2.9316070230488176,
+              "mae": 2.2686728603603603
             }
           }
         },
         {
-          "start_gw": 27,
-          "end_gw": 32,
+          "season": "2024-25",
+          "start_gw": 1,
+          "end_gw": 12,
           "role": "development",
+          "train_before": 202401,
           "all_players": {
+            "selected_ensemble": {
+              "rows": 839,
+              "rmse": 1.669345776190053,
+              "mae": 0.7934140232511088
+            },
             "gradient_boosting": {
-              "rows": 552,
-              "rmse": 1.5372401919342997,
-              "mae": 0.6280962969927135
+              "rows": 839,
+              "rmse": 1.6781326051099417,
+              "mae": 0.779833427114154
             },
             "form_baseline": {
-              "rows": 552,
-              "rmse": 1.635138492079962,
-              "mae": 0.6267805954899366
+              "rows": 839,
+              "rmse": 1.8712749450874102,
+              "mae": 0.863537393762126
             }
           },
           "regular_players": {
+            "selected_ensemble": {
+              "rows": 244,
+              "rmse": 2.8692479419272026,
+              "mae": 2.0993797176311952
+            },
             "gradient_boosting": {
-              "rows": 116,
-              "rmse": 2.8270357457280086,
-              "mae": 2.2062451875016844
+              "rows": 244,
+              "rmse": 2.8794159224029667,
+              "mae": 2.088008171556586
             },
             "form_baseline": {
-              "rows": 116,
-              "rmse": 3.0180678699847108,
-              "mae": 2.3526041666666666
+              "rows": 244,
+              "rmse": 3.2177463868148863,
+              "mae": 2.390128927595628
             }
           }
         },
         {
-          "start_gw": 33,
+          "season": "2024-25",
+          "start_gw": 13,
+          "end_gw": 25,
+          "role": "development",
+          "train_before": 202413,
+          "all_players": {
+            "selected_ensemble": {
+              "rows": 959,
+              "rmse": 1.5350628951764138,
+              "mae": 0.7575681150281296
+            },
+            "gradient_boosting": {
+              "rows": 959,
+              "rmse": 1.5590734643045605,
+              "mae": 0.76497287262416
+            },
+            "form_baseline": {
+              "rows": 959,
+              "rmse": 1.6393063779189199,
+              "mae": 0.7669941852498754
+            }
+          },
+          "regular_players": {
+            "selected_ensemble": {
+              "rows": 257,
+              "rmse": 2.485785171288172,
+              "mae": 1.990175872712321
+            },
+            "gradient_boosting": {
+              "rows": 257,
+              "rmse": 2.5206583722974405,
+              "mae": 2.026837361821755
+            },
+            "form_baseline": {
+              "rows": 257,
+              "rmse": 2.685242349212752,
+              "mae": 2.119422827496757
+            }
+          }
+        },
+        {
+          "season": "2024-25",
+          "start_gw": 26,
+          "end_gw": 38,
+          "role": "development",
+          "train_before": 202426,
+          "all_players": {
+            "selected_ensemble": {
+              "rows": 1029,
+              "rmse": 1.5547457816547063,
+              "mae": 0.6869355797296153
+            },
+            "gradient_boosting": {
+              "rows": 1029,
+              "rmse": 1.5828334616654594,
+              "mae": 0.6689359181400243
+            },
+            "form_baseline": {
+              "rows": 1029,
+              "rmse": 1.6952841379785688,
+              "mae": 0.7031866211890113
+            }
+          },
+          "regular_players": {
+            "selected_ensemble": {
+              "rows": 254,
+              "rmse": 2.9256191454169964,
+              "mae": 2.185367076083317
+            },
+            "gradient_boosting": {
+              "rows": 254,
+              "rmse": 2.9658394093882974,
+              "mae": 2.1699916430110795
+            },
+            "form_baseline": {
+              "rows": 254,
+              "rmse": 3.202983765531068,
+              "mae": 2.4344963910761153
+            }
+          }
+        },
+        {
+          "season": "2025-26",
+          "start_gw": 1,
+          "end_gw": 12,
+          "role": "test",
+          "train_before": 202501,
+          "all_players": {
+            "selected_ensemble": {
+              "rows": 1020,
+              "rmse": 1.4825372114710806,
+              "mae": 0.6793237073062015
+            },
+            "gradient_boosting": {
+              "rows": 1020,
+              "rmse": 1.5076529309637583,
+              "mae": 0.6750500502496085
+            },
+            "form_baseline": {
+              "rows": 1020,
+              "rmse": 1.5896871060267068,
+              "mae": 0.6698207047188685
+            }
+          },
+          "regular_players": {
+            "selected_ensemble": {
+              "rows": 238,
+              "rmse": 2.701925162081006,
+              "mae": 2.0947284575326335
+            },
+            "gradient_boosting": {
+              "rows": 238,
+              "rmse": 2.7535586313437053,
+              "mae": 2.137157120242854
+            },
+            "form_baseline": {
+              "rows": 238,
+              "rmse": 2.9128625929781364,
+              "mae": 2.2061484593837535
+            }
+          }
+        },
+        {
+          "season": "2025-26",
+          "start_gw": 13,
+          "end_gw": 25,
+          "role": "test",
+          "train_before": 202513,
+          "all_players": {
+            "selected_ensemble": {
+              "rows": 1167,
+              "rmse": 1.3464319189440321,
+              "mae": 0.5564521482057422
+            },
+            "gradient_boosting": {
+              "rows": 1167,
+              "rmse": 1.3661222709137486,
+              "mae": 0.5633844280245202
+            },
+            "form_baseline": {
+              "rows": 1167,
+              "rmse": 1.5145567847859571,
+              "mae": 0.5842685464824726
+            }
+          },
+          "regular_players": {
+            "selected_ensemble": {
+              "rows": 260,
+              "rmse": 2.6386780730163726,
+              "mae": 2.0336373006057493
+            },
+            "gradient_boosting": {
+              "rows": 260,
+              "rmse": 2.6743685370515893,
+              "mae": 2.0365610342915015
+            },
+            "form_baseline": {
+              "rows": 260,
+              "rmse": 2.987656888470712,
+              "mae": 2.2872275641025643
+            }
+          }
+        },
+        {
+          "season": "2025-26",
+          "start_gw": 26,
           "end_gw": 38,
           "role": "test",
+          "train_before": 202526,
           "all_players": {
+            "selected_ensemble": {
+              "rows": 1196,
+              "rmse": 1.3679242475172706,
+              "mae": 0.5646380476201363
+            },
             "gradient_boosting": {
-              "rows": 550,
-              "rmse": 1.2107162072420896,
-              "mae": 0.5457015070106056
+              "rows": 1196,
+              "rmse": 1.3666670283633908,
+              "mae": 0.5792543729015347
             },
             "form_baseline": {
-              "rows": 550,
-              "rmse": 1.3154794738279993,
-              "mae": 0.5825307394101769
+              "rows": 1196,
+              "rmse": 1.4695380063763885,
+              "mae": 0.5968417046576128
             }
           },
           "regular_players": {
+            "selected_ensemble": {
+              "rows": 250,
+              "rmse": 2.6372843138527777,
+              "mae": 2.0498736054238176
+            },
             "gradient_boosting": {
-              "rows": 114,
-              "rmse": 2.517528275248518,
-              "mae": 1.9771786101326259
+              "rows": 250,
+              "rmse": 2.6416913464357856,
+              "mae": 2.073815120555719
             },
             "form_baseline": {
-              "rows": 114,
-              "rmse": 2.7183076565382627,
-              "mae": 2.2469298245614033
+              "rows": 250,
+              "rmse": 2.8333609327699887,
+              "mae": 2.269133333333333
             }
           }
         }
       ],
-      "training_rows": 9860,
-      "top_features": [
-        {
-          "feature": "total_points_mean8",
-          "importance": 0.1913762424051558
+      "training_rows": 22478,
+      "top_features": [],
+      "residual_quantiles_regular": {
+        "p10": -2.534207884156329,
+        "p90": 3.842096818784288
+      },
+      "test_mean_error": -0.013555052046606656,
+      "production_bias": {
+        "regular": -0.044063139648331306,
+        "rotation": -0.08676726109658342,
+        "limited": -0.012687113424666397
+      },
+      "component_training_rows": {
+        "ridge_recent": {
+          "rows": 9860,
+          "seasons": [
+            "2023-24",
+            "2024-25",
+            "2025-26",
+            "2026-27"
+          ]
         },
-        {
-          "feature": "points_last",
-          "importance": 0.16270426060814078
-        },
-        {
-          "feature": "influence_mean3",
-          "importance": 0.1284908719178631
-        },
-        {
-          "feature": "bps_mean8",
-          "importance": 0.1147075100785057
-        },
-        {
-          "feature": "bps_mean3",
-          "importance": 0.07355253225151921
-        },
-        {
-          "feature": "minutes_last",
-          "importance": 0.05783539922639808
-        },
-        {
-          "feature": "starts_mean8",
-          "importance": 0.042657453855947026
-        },
-        {
-          "feature": "expected_goals_conceded_mean8",
-          "importance": 0.032217363845831584
-        },
-        {
-          "feature": "minutes_mean3",
-          "importance": 0.020634362566201526
-        },
-        {
-          "feature": "total_points_mean3",
-          "importance": 0.019375349550606838
+        "hurdle": {
+          "rows": 15135,
+          "seasons": [
+            "2021-22",
+            "2022-23",
+            "2023-24",
+            "2024-25",
+            "2025-26",
+            "2026-27"
+          ]
         }
-      ]
+      }
     },
     "DEF": {
-      "selected_method": "gradient_boosting",
-      "development_rmse_ml": 3.0849012512768796,
-      "development_rmse_baseline": 3.3307753891098297,
+      "selected_method": "adaptive_ensemble",
+      "recipe": {
+        "components": [
+          "hist_smooth",
+          "hurdle"
+        ],
+        "weights": [
+          0.75,
+          0.25
+        ],
+        "calibration_gain": 0,
+        "objective": 2.53626331080489,
+        "all_players": {
+          "rows": 13891,
+          "rmse": 1.8225194475288218,
+          "mae": 0.9823713764061986
+        },
+        "regular_players": {
+          "rows": 4571,
+          "rmse": 2.7741779318969124,
+          "mae": 2.057804948222991
+        }
+      },
+      "leaderboard": [
+        {
+          "components": [
+            "hist_smooth",
+            "hurdle"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 0,
+          "objective": 2.53626331080489,
+          "all_players": {
+            "rows": 13891,
+            "rmse": 1.8225194475288218,
+            "mae": 0.9823713764061986
+          },
+          "regular_players": {
+            "rows": 4571,
+            "rmse": 2.7741779318969124,
+            "mae": 2.057804948222991
+          }
+        },
+        {
+          "components": [
+            "hist_smooth",
+            "hurdle"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 0.5,
+          "objective": 2.5363431699103844,
+          "all_players": {
+            "rows": 13891,
+            "rmse": 1.8225470754477306,
+            "mae": 0.97641094254251
+          },
+          "regular_players": {
+            "rows": 4571,
+            "rmse": 2.774275201397936,
+            "mae": 2.0531165674192295
+          }
+        },
+        {
+          "components": [
+            "hist_smooth",
+            "hurdle"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 1,
+          "objective": 2.5365527850147673,
+          "all_players": {
+            "rows": 13891,
+            "rmse": 1.8227015607761288,
+            "mae": 0.9705845853029405
+          },
+          "regular_players": {
+            "rows": 4571,
+            "rmse": 2.7745031930943136,
+            "mae": 2.0485327329153824
+          }
+        },
+        {
+          "components": [
+            "hist_smooth",
+            "hurdle"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 0,
+          "objective": 2.5368586509847293,
+          "all_players": {
+            "rows": 13891,
+            "rmse": 1.8223945006144018,
+            "mae": 0.9822037178506425
+          },
+          "regular_players": {
+            "rows": 4571,
+            "rmse": 2.775013367774838,
+            "mae": 2.0615509809135677
+          }
+        },
+        {
+          "components": [
+            "hist_smooth",
+            "hist_long"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 0,
+          "objective": 2.5369199771048137,
+          "all_players": {
+            "rows": 13891,
+            "rmse": 1.8236049603807483,
+            "mae": 0.9827570132470496
+          },
+          "regular_players": {
+            "rows": 4571,
+            "rmse": 2.7746916493461686,
+            "mae": 2.054104850905607
+          }
+        },
+        {
+          "components": [
+            "hist_smooth",
+            "hist_long"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 0.5,
+          "objective": 2.536977249539471,
+          "all_players": {
+            "rows": 13891,
+            "rmse": 1.823632807999337,
+            "mae": 0.9769062520267965
+          },
+          "regular_players": {
+            "rows": 4571,
+            "rmse": 2.774758730052849,
+            "mae": 2.050362727431151
+          }
+        },
+        {
+          "components": [
+            "hist_smooth",
+            "hurdle"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 0.5,
+          "objective": 2.5369949543376906,
+          "all_players": {
+            "rows": 13891,
+            "rmse": 1.822430881958278,
+            "mae": 0.9757595402523676
+          },
+          "regular_players": {
+            "rows": 4571,
+            "rmse": 2.7751829784641617,
+            "mae": 2.0552529847733494
+          }
+        },
+        {
+          "components": [
+            "hist_smooth",
+            "hist_long"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 1,
+          "objective": 2.537139498735493,
+          "all_players": {
+            "rows": 13891,
+            "rmse": 1.823774661264713,
+            "mae": 0.9711910924628739
+          },
+          "regular_players": {
+            "rows": 4571,
+            "rmse": 2.77492777789242,
+            "mae": 2.0467097382500508
+          }
+        },
+        {
+          "components": [
+            "hist_smooth",
+            "hurdle"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 1,
+          "objective": 2.5373270953618903,
+          "all_players": {
+            "rows": 13891,
+            "rmse": 1.8226361618723852,
+            "mae": 0.9694568141442846
+          },
+          "regular_players": {
+            "rows": 4571,
+            "rmse": 2.775557406525059,
+            "mae": 2.049091107539806
+          }
+        },
+        {
+          "components": [
+            "hist_smooth",
+            "hist_long"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 0,
+          "objective": 2.5373567419015903,
+          "all_players": {
+            "rows": 13891,
+            "rmse": 1.8238629000341557,
+            "mae": 0.9825020119020497
+          },
+          "regular_players": {
+            "rows": 4571,
+            "rmse": 2.7751880225240684,
+            "mae": 2.0534200625654586
+          }
+        },
+        {
+          "components": [
+            "hist_smooth",
+            "hist_long"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 0.5,
+          "objective": 2.5374530074025534,
+          "all_players": {
+            "rows": 13891,
+            "rmse": 1.8239028943762996,
+            "mae": 0.9762629593793778
+          },
+          "regular_players": {
+            "rows": 4571,
+            "rmse": 2.7753030450779717,
+            "mae": 2.049064430784718
+          }
+        },
+        {
+          "components": [
+            "hist_smooth",
+            "hist_long"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 1,
+          "objective": 2.537680316914517,
+          "all_players": {
+            "rows": 13891,
+            "rmse": 1.8240764041775455,
+            "mae": 0.9701873372601068
+          },
+          "regular_players": {
+            "rows": 4571,
+            "rmse": 2.7755482878268407,
+            "mae": 2.044815088956531
+          }
+        }
+      ],
+      "development_rmse_ml": 2.7741779318969124,
+      "development_rmse_baseline": 3.050454863161307,
+      "development_rows": 13891,
       "test_all_players": {
-        "rows": 1538,
-        "rmse": 1.9038200723155068,
-        "mae": 1.0168382104764488
+        "rows": 9601,
+        "rmse": 2.102781147034188,
+        "mae": 1.1282716027616735
       },
       "test_regular_players": {
-        "rows": 481,
-        "rmse": 2.802085151978452,
-        "mae": 2.1826056892016945
+        "rows": 3146,
+        "rmse": 3.069187308379145,
+        "mae": 2.3298362853570858
       },
+      "test_legacy_all_players": {
+        "rows": 9601,
+        "rmse": 2.1250950748671933,
+        "mae": 1.1359322230532252
+      },
+      "test_legacy_regular_players": {
+        "rows": 3146,
+        "rmse": 3.106329844297453,
+        "mae": 2.361532040525731
+      },
+      "test_baseline_all_players": {
+        "rows": 9601,
+        "rmse": 2.2969725194930612,
+        "mae": 1.2057931209971275
+      },
+      "test_baseline_regular_players": {
+        "rows": 3146,
+        "rmse": 3.391998757081302,
+        "mae": 2.6016361384827293
+      },
+      "test_gameweek_totals": {
+        "rows": 9601,
+        "rmse": 2.1226284748199915,
+        "mae": 1.139959408648795
+      },
+      "test_gameweek_regular_players": {
+        "rows": 3146,
+        "rmse": 3.104494025589089,
+        "mae": 2.354794071175673
+      },
+      "rmse_change_vs_legacy_percent": -1.1957048278853355,
       "blocks": [
         {
-          "start_gw": 21,
-          "end_gw": 26,
+          "season": "2023-24",
+          "start_gw": 20,
+          "end_gw": 38,
           "role": "development",
+          "train_before": 202320,
           "all_players": {
+            "selected_ensemble": {
+              "rows": 4867,
+              "rmse": 1.8382434352904415,
+              "mae": 0.952109477628447
+            },
             "gradient_boosting": {
-              "rows": 1578,
-              "rmse": 1.9201551298972315,
-              "mae": 1.1215038450608115
+              "rows": 4867,
+              "rmse": 1.8528641253171863,
+              "mae": 0.9659797832309892
             },
             "form_baseline": {
-              "rows": 1578,
-              "rmse": 2.1149701340543925,
-              "mae": 1.1681175872648801
+              "rows": 4867,
+              "rmse": 1.9982470974354347,
+              "mae": 0.9921218020692735
             }
           },
           "regular_players": {
+            "selected_ensemble": {
+              "rows": 1543,
+              "rmse": 2.8334669655479594,
+              "mae": 2.0723934409930154
+            },
             "gradient_boosting": {
-              "rows": 519,
-              "rmse": 2.9334567114182457,
-              "mae": 2.371332356917184
+              "rows": 1543,
+              "rmse": 2.8587106693720545,
+              "mae": 2.1058056273768235
             },
             "form_baseline": {
-              "rows": 519,
-              "rmse": 3.2400158882437657,
-              "mae": 2.5883469813744377
+              "rows": 1543,
+              "rmse": 3.1053291677334323,
+              "mae": 2.2779032998487794
             }
           }
         },
         {
-          "start_gw": 27,
-          "end_gw": 32,
+          "season": "2024-25",
+          "start_gw": 1,
+          "end_gw": 12,
           "role": "development",
+          "train_before": 202401,
           "all_players": {
+            "selected_ensemble": {
+              "rows": 2594,
+              "rmse": 1.8101383679394425,
+              "mae": 1.0417699544200862
+            },
             "gradient_boosting": {
-              "rows": 1544,
-              "rmse": 2.122197259809027,
-              "mae": 1.155093565586136
+              "rows": 2594,
+              "rmse": 1.8195752504080527,
+              "mae": 1.0481773053457775
             },
             "form_baseline": {
-              "rows": 1544,
-              "rmse": 2.2350513553252442,
-              "mae": 1.1760471049692125
+              "rows": 2594,
+              "rmse": 2.0167872698500124,
+              "mae": 1.112260764225425
             }
           },
           "regular_players": {
+            "selected_ensemble": {
+              "rows": 974,
+              "rmse": 2.612740061279145,
+              "mae": 1.9404861372750486
+            },
             "gradient_boosting": {
-              "rows": 491,
-              "rmse": 3.237288961351659,
-              "mae": 2.5031442376246424
+              "rows": 974,
+              "rmse": 2.6240593519113307,
+              "mae": 1.9551652983877692
             },
             "form_baseline": {
-              "rows": 491,
-              "rmse": 3.424096207458765,
-              "mae": 2.680946622539036
+              "rows": 974,
+              "rmse": 2.955289114909135,
+              "mae": 2.2102778490759754
             }
           }
         },
         {
-          "start_gw": 33,
+          "season": "2024-25",
+          "start_gw": 13,
+          "end_gw": 25,
+          "role": "development",
+          "train_before": 202413,
+          "all_players": {
+            "selected_ensemble": {
+              "rows": 3107,
+              "rmse": 1.8382261861689464,
+              "mae": 1.0050269392897204
+            },
+            "gradient_boosting": {
+              "rows": 3107,
+              "rmse": 1.8718806788537348,
+              "mae": 1.0115904560994458
+            },
+            "form_baseline": {
+              "rows": 3107,
+              "rmse": 1.9724272054974386,
+              "mae": 1.0368151000661987
+            }
+          },
+          "regular_players": {
+            "selected_ensemble": {
+              "rows": 1049,
+              "rmse": 2.7934335936924115,
+              "mae": 2.0948894925233366
+            },
+            "gradient_boosting": {
+              "rows": 1049,
+              "rmse": 2.856080532328103,
+              "mae": 2.1180138245839433
+            },
+            "form_baseline": {
+              "rows": 1049,
+              "rmse": 3.0134008681946463,
+              "mae": 2.2533990705433746
+            }
+          }
+        },
+        {
+          "season": "2024-25",
+          "start_gw": 26,
+          "end_gw": 38,
+          "role": "development",
+          "train_before": 202426,
+          "all_players": {
+            "selected_ensemble": {
+              "rows": 3323,
+              "rmse": 1.7940507955081617,
+              "mae": 0.9591435449599726
+            },
+            "gradient_boosting": {
+              "rows": 3323,
+              "rmse": 1.8194705233881925,
+              "mae": 0.9624314967700548
+            },
+            "form_baseline": {
+              "rows": 3323,
+              "rmse": 1.9395275086547845,
+              "mae": 0.9928802789283002
+            }
+          },
+          "regular_players": {
+            "selected_ensemble": {
+              "rows": 1005,
+              "rmse": 2.8136341504624074,
+              "mae": 2.110398769663874
+            },
+            "gradient_boosting": {
+              "rows": 1005,
+              "rmse": 2.865490787248557,
+              "mae": 2.132651822755717
+            },
+            "form_baseline": {
+              "rows": 1005,
+              "rmse": 3.0943642369510704,
+              "mae": 2.3562383913764515
+            }
+          }
+        },
+        {
+          "season": "2025-26",
+          "start_gw": 1,
+          "end_gw": 12,
+          "role": "test",
+          "train_before": 202501,
+          "all_players": {
+            "selected_ensemble": {
+              "rows": 2914,
+              "rmse": 2.2346949813972286,
+              "mae": 1.1675854123587943
+            },
+            "gradient_boosting": {
+              "rows": 2914,
+              "rmse": 2.2629272211645297,
+              "mae": 1.1660397572313577
+            },
+            "form_baseline": {
+              "rows": 2914,
+              "rmse": 2.4265967102687545,
+              "mae": 1.267328401157826
+            }
+          },
+          "regular_players": {
+            "selected_ensemble": {
+              "rows": 972,
+              "rmse": 3.219985308231645,
+              "mae": 2.3165214408349475
+            },
+            "gradient_boosting": {
+              "rows": 972,
+              "rmse": 3.273523436096841,
+              "mae": 2.329604365110261
+            },
+            "form_baseline": {
+              "rows": 972,
+              "rmse": 3.5514918226807772,
+              "mae": 2.640302854938272
+            }
+          }
+        },
+        {
+          "season": "2025-26",
+          "start_gw": 13,
+          "end_gw": 25,
+          "role": "test",
+          "train_before": 202513,
+          "all_players": {
+            "selected_ensemble": {
+              "rows": 3340,
+              "rmse": 2.0696983126065382,
+              "mae": 1.1490160022035403
+            },
+            "gradient_boosting": {
+              "rows": 3340,
+              "rmse": 2.1003631255335766,
+              "mae": 1.1678631426742792
+            },
+            "form_baseline": {
+              "rows": 3340,
+              "rmse": 2.2957767702173277,
+              "mae": 1.233871476966863
+            }
+          },
+          "regular_players": {
+            "selected_ensemble": {
+              "rows": 1115,
+              "rmse": 2.983163883900298,
+              "mae": 2.371652743877901
+            },
+            "gradient_boosting": {
+              "rows": 1115,
+              "rmse": 3.026434170140081,
+              "mae": 2.4123261145763157
+            },
+            "form_baseline": {
+              "rows": 1115,
+              "rmse": 3.3374854220116097,
+              "mae": 2.626005231689088
+            }
+          }
+        },
+        {
+          "season": "2025-26",
+          "start_gw": 26,
           "end_gw": 38,
           "role": "test",
+          "train_before": 202526,
           "all_players": {
+            "selected_ensemble": {
+              "rows": 3347,
+              "rmse": 2.0152632567961177,
+              "mae": 1.0733427903022035
+            },
             "gradient_boosting": {
-              "rows": 1538,
-              "rmse": 1.9038200723155068,
-              "mae": 1.0168382104764488
+              "rows": 3347,
+              "rmse": 2.023301235505727,
+              "mae": 1.077855549575664
             },
             "form_baseline": {
-              "rows": 1538,
-              "rmse": 2.106239239985597,
-              "mae": 1.065911842135873
+              "rows": 3347,
+              "rmse": 2.1791020536311523,
+              "mae": 1.1241990022856876
             }
           },
           "regular_players": {
+            "selected_ensemble": {
+              "rows": 1059,
+              "rmse": 3.016223664234429,
+              "mae": 2.2980295597903337
+            },
             "gradient_boosting": {
-              "rows": 481,
-              "rmse": 2.802085151978452,
-              "mae": 2.1826056892016945
+              "rows": 1059,
+              "rmse": 3.0308639432027817,
+              "mae": 2.3373566939133004
             },
             "form_baseline": {
-              "rows": 481,
-              "rmse": 3.1592910749419696,
-              "mae": 2.4087166493416494
+              "rows": 1059,
+              "rmse": 3.297793481656336,
+              "mae": 2.5404882751022977
             }
           }
         }
       ],
-      "training_rows": 28977,
-      "top_features": [
-        {
-          "feature": "influence_mean3",
-          "importance": 0.1361805572371762
+      "training_rows": 68598,
+      "top_features": [],
+      "residual_quantiles_regular": {
+        "p10": -2.7966091376913402,
+        "p90": 4.447383467874471
+      },
+      "test_mean_error": 0.07449645071874549,
+      "production_bias": {
+        "regular": 0.0634998374027245,
+        "rotation": 0.0037258850703057456,
+        "limited": 0.002446653898094764
+      },
+      "component_training_rows": {
+        "hist_smooth": {
+          "rows": 45513,
+          "seasons": [
+            "2021-22",
+            "2022-23",
+            "2023-24",
+            "2024-25",
+            "2025-26",
+            "2026-27"
+          ]
         },
-        {
-          "feature": "minutes_last",
-          "importance": 0.13307282886878088
-        },
-        {
-          "feature": "expected_goals_conceded_mean3",
-          "importance": 0.11292208948837071
-        },
-        {
-          "feature": "total_points_mean8",
-          "importance": 0.10726151074919597
-        },
-        {
-          "feature": "starts_mean3",
-          "importance": 0.08250874827916622
-        },
-        {
-          "feature": "total_points_mean3",
-          "importance": 0.06577107354595015
-        },
-        {
-          "feature": "minutes_mean3",
-          "importance": 0.060421685242433305
-        },
-        {
-          "feature": "points_last",
-          "importance": 0.028537996377503747
-        },
-        {
-          "feature": "threat_mean3",
-          "importance": 0.02387573026741722
-        },
-        {
-          "feature": "opponent_goals_for",
-          "importance": 0.022068247535101504
+        "hurdle": {
+          "rows": 45513,
+          "seasons": [
+            "2021-22",
+            "2022-23",
+            "2023-24",
+            "2024-25",
+            "2025-26",
+            "2026-27"
+          ]
         }
-      ]
+      }
     },
     "MID": {
-      "selected_method": "gradient_boosting",
-      "development_rmse_ml": 2.81385595320686,
-      "development_rmse_baseline": 3.059721805704072,
+      "selected_method": "adaptive_ensemble",
+      "recipe": {
+        "components": [
+          "hurdle",
+          "ridge_recent"
+        ],
+        "weights": [
+          0.5,
+          0.5
+        ],
+        "calibration_gain": 0,
+        "objective": 2.696198122074716,
+        "all_players": {
+          "rows": 18640,
+          "rmse": 1.9225680970318293,
+          "mae": 0.9690820636489699
+        },
+        "regular_players": {
+          "rows": 5417,
+          "rmse": 2.954074797089011,
+          "mae": 2.0184074326328183
+        }
+      },
+      "leaderboard": [
+        {
+          "components": [
+            "hurdle",
+            "ridge_recent"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 0,
+          "objective": 2.696198122074716,
+          "all_players": {
+            "rows": 18640,
+            "rmse": 1.9225680970318293,
+            "mae": 0.9690820636489699
+          },
+          "regular_players": {
+            "rows": 5417,
+            "rmse": 2.954074797089011,
+            "mae": 2.0184074326328183
+          }
+        },
+        {
+          "components": [
+            "hurdle",
+            "ridge_recent"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 0.5,
+          "objective": 2.6969290160267807,
+          "all_players": {
+            "rows": 18640,
+            "rmse": 1.9229992131659843,
+            "mae": 0.9667405667606045
+          },
+          "regular_players": {
+            "rows": 5417,
+            "rmse": 2.9549056169803793,
+            "mae": 2.022947952104924
+          }
+        },
+        {
+          "components": [
+            "hurdle",
+            "ridge_recent"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 1,
+          "objective": 2.6979299787281765,
+          "all_players": {
+            "rows": 18640,
+            "rmse": 1.9236138616338272,
+            "mae": 0.9649454760949978
+          },
+          "regular_players": {
+            "rows": 5417,
+            "rmse": 2.9560353510929596,
+            "mae": 2.0278367261892725
+          }
+        },
+        {
+          "components": [
+            "hurdle",
+            "ridge_recent"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 0,
+          "objective": 2.698146511079071,
+          "all_players": {
+            "rows": 18640,
+            "rmse": 1.9223892714997843,
+            "mae": 0.9622278952932759
+          },
+          "regular_players": {
+            "rows": 5417,
+            "rmse": 2.9567322576054993,
+            "mae": 2.0164712040904176
+          }
+        },
+        {
+          "components": [
+            "hurdle",
+            "ridge_recent"
+          ],
+          "weights": [
+            0.25,
+            0.75
+          ],
+          "calibration_gain": 0,
+          "objective": 2.6987183305503644,
+          "all_players": {
+            "rows": 18640,
+            "rmse": 1.9261025656830844,
+            "mae": 0.9772331209111351
+          },
+          "regular_players": {
+            "rows": 5417,
+            "rmse": 2.9562569188394576,
+            "mae": 2.0223739455258074
+          }
+        },
+        {
+          "components": [
+            "hurdle",
+            "ridge_recent"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 0.5,
+          "objective": 2.698902231651196,
+          "all_players": {
+            "rows": 18640,
+            "rmse": 1.9228422173609498,
+            "mae": 0.9608211592831077
+          },
+          "regular_players": {
+            "rows": 5417,
+            "rmse": 2.9575889030812776,
+            "mae": 2.021741340724061
+          }
+        },
+        {
+          "components": [
+            "hurdle",
+            "ridge_recent"
+          ],
+          "weights": [
+            0.25,
+            0.75
+          ],
+          "calibration_gain": 0.5,
+          "objective": 2.699423044338639,
+          "all_players": {
+            "rows": 18640,
+            "rmse": 1.9265016227612317,
+            "mae": 0.9743225369829159
+          },
+          "regular_players": {
+            "rows": 5417,
+            "rmse": 2.9570635181977747,
+            "mae": 2.0261893252212593
+          }
+        },
+        {
+          "components": [
+            "hurdle",
+            "ridge_recent"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 1,
+          "objective": 2.699982071743716,
+          "all_players": {
+            "rows": 18640,
+            "rmse": 1.9235069805036022,
+            "mae": 0.9595778124489618
+          },
+          "regular_players": {
+            "rows": 5417,
+            "rmse": 2.958807102157088,
+            "mae": 2.0273315679533797
+          }
+        },
+        {
+          "components": [
+            "hurdle",
+            "ridge_recent"
+          ],
+          "weights": [
+            0.25,
+            0.75
+          ],
+          "calibration_gain": 1,
+          "objective": 2.7003508414192097,
+          "all_players": {
+            "rows": 18640,
+            "rmse": 1.9270555759463084,
+            "mae": 0.9720983489710224
+          },
+          "regular_players": {
+            "rows": 5417,
+            "rmse": 2.9581159299101767,
+            "mae": 2.030268181869117
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hist_smooth"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 0,
+          "objective": 2.700740373943262,
+          "all_players": {
+            "rows": 18640,
+            "rmse": 1.9265216851194293,
+            "mae": 0.9744502338618939
+          },
+          "regular_players": {
+            "rows": 5417,
+            "rmse": 2.9588132702178727,
+            "mae": 2.0172677168609003
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hist_smooth"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 0.5,
+          "objective": 2.701580082110079,
+          "all_players": {
+            "rows": 18640,
+            "rmse": 1.9269985905093037,
+            "mae": 0.9721468200310467
+          },
+          "regular_players": {
+            "rows": 5417,
+            "rmse": 2.959773912643671,
+            "mae": 2.022809154427059
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hist_smooth"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 0,
+          "objective": 2.701749799328485,
+          "all_players": {
+            "rows": 18640,
+            "rmse": 1.9286206598234668,
+            "mae": 0.9800233271845612
+          },
+          "regular_players": {
+            "rows": 5417,
+            "rmse": 2.9594595124968244,
+            "mae": 2.0221316799368303
+          }
+        }
+      ],
+      "development_rmse_ml": 2.954074797089011,
+      "development_rmse_baseline": 3.205848599281317,
+      "development_rows": 18640,
       "test_all_players": {
-        "rows": 2139,
-        "rmse": 1.7248433587661147,
-        "mae": 0.8755709659413115
+        "rows": 13119,
+        "rmse": 1.8579724915326974,
+        "mae": 0.9428082970584576
       },
       "test_regular_players": {
-        "rows": 515,
-        "rmse": 2.8717225771036388,
-        "mae": 2.1608108025822412
+        "rows": 3502,
+        "rmse": 2.9538757701326066,
+        "mae": 2.133464594995129
       },
+      "test_legacy_all_players": {
+        "rows": 13119,
+        "rmse": 1.8707670684920314,
+        "mae": 0.9523938705392108
+      },
+      "test_legacy_regular_players": {
+        "rows": 3502,
+        "rmse": 2.9719500307756794,
+        "mae": 2.144193981606411
+      },
+      "test_baseline_all_players": {
+        "rows": 13119,
+        "rmse": 2.0121279620639716,
+        "mae": 1.001723046093146
+      },
+      "test_baseline_regular_players": {
+        "rows": 3502,
+        "rmse": 3.2260800822484,
+        "mae": 2.3975641300209403
+      },
+      "test_gameweek_totals": {
+        "rows": 13119,
+        "rmse": 1.879925731021836,
+        "mae": 0.9540060348489756
+      },
+      "test_gameweek_regular_players": {
+        "rows": 3502,
+        "rmse": 2.9727287787066126,
+        "mae": 2.1509054608396747
+      },
+      "rmse_change_vs_legacy_percent": -0.6081616600517203,
       "blocks": [
         {
-          "start_gw": 21,
-          "end_gw": 26,
+          "season": "2023-24",
+          "start_gw": 20,
+          "end_gw": 38,
           "role": "development",
+          "train_before": 202320,
           "all_players": {
+            "selected_ensemble": {
+              "rows": 6556,
+              "rmse": 1.8927547070789774,
+              "mae": 0.9014191253271057
+            },
             "gradient_boosting": {
-              "rows": 2174,
-              "rmse": 1.8327922890142194,
-              "mae": 0.9354661826624272
+              "rows": 6556,
+              "rmse": 1.9140926519863672,
+              "mae": 0.9089877411655373
             },
             "form_baseline": {
-              "rows": 2174,
-              "rmse": 1.9679593131275523,
-              "mae": 0.9696671398895358
+              "rows": 6556,
+              "rmse": 2.026852957805126,
+              "mae": 0.9425662192147739
             }
           },
           "regular_players": {
+            "selected_ensemble": {
+              "rows": 1711,
+              "rmse": 3.105405668414735,
+              "mae": 2.091252699188701
+            },
             "gradient_boosting": {
-              "rows": 555,
-              "rmse": 2.8606662965283487,
-              "mae": 2.16625997681486
+              "rows": 1711,
+              "rmse": 3.1447265581555084,
+              "mae": 2.1156174517990016
             },
             "form_baseline": {
-              "rows": 555,
-              "rmse": 3.107714367781685,
-              "mae": 2.3888513513513514
+              "rows": 1711,
+              "rmse": 3.3427493659223524,
+              "mae": 2.334312658289499
             }
           }
         },
         {
-          "start_gw": 27,
-          "end_gw": 32,
+          "season": "2024-25",
+          "start_gw": 1,
+          "end_gw": 12,
           "role": "development",
+          "train_before": 202401,
           "all_players": {
+            "selected_ensemble": {
+              "rows": 3600,
+              "rmse": 1.9603090554229035,
+              "mae": 1.0917078212956761
+            },
             "gradient_boosting": {
-              "rows": 2139,
-              "rmse": 1.7025472012334755,
-              "mae": 0.8488337399235092
+              "rows": 3600,
+              "rmse": 1.9694064456906013,
+              "mae": 1.0820722468005868
             },
             "form_baseline": {
-              "rows": 2139,
-              "rmse": 1.8374664127949605,
-              "mae": 0.8516748823443819
+              "rows": 3600,
+              "rmse": 2.1099746507626027,
+              "mae": 1.1378801451524734
             }
           },
           "regular_players": {
+            "selected_ensemble": {
+              "rows": 1163,
+              "rmse": 2.8363900555060697,
+              "mae": 2.0192368859804994
+            },
             "gradient_boosting": {
-              "rows": 540,
-              "rmse": 2.764919615722138,
-              "mae": 2.0638743963968613
+              "rows": 1163,
+              "rmse": 2.8597112694073274,
+              "mae": 2.0253858039616484
             },
             "form_baseline": {
-              "rows": 540,
-              "rmse": 3.009598725893784,
-              "mae": 2.2091350308641973
+              "rows": 1163,
+              "rmse": 3.08182126867442,
+              "mae": 2.2099722341645167
             }
           }
         },
         {
-          "start_gw": 33,
+          "season": "2024-25",
+          "start_gw": 13,
+          "end_gw": 25,
+          "role": "development",
+          "train_before": 202413,
+          "all_players": {
+            "selected_ensemble": {
+              "rows": 4159,
+              "rmse": 2.0478558158126874,
+              "mae": 1.012840775678497
+            },
+            "gradient_boosting": {
+              "rows": 4159,
+              "rmse": 2.084471841866782,
+              "mae": 1.029833500597604
+            },
+            "form_baseline": {
+              "rows": 4159,
+              "rmse": 2.2162322770593703,
+              "mae": 1.0902184166541626
+            }
+          },
+          "regular_players": {
+            "selected_ensemble": {
+              "rows": 1262,
+              "rmse": 3.053296068651814,
+              "mae": 2.029272885711061
+            },
+            "gradient_boosting": {
+              "rows": 1262,
+              "rmse": 3.1297767974220467,
+              "mae": 2.081922941254972
+            },
+            "form_baseline": {
+              "rows": 1262,
+              "rmse": 3.342999171136268,
+              "mae": 2.310339078182779
+            }
+          }
+        },
+        {
+          "season": "2024-25",
+          "start_gw": 26,
+          "end_gw": 38,
+          "role": "development",
+          "train_before": 202426,
+          "all_players": {
+            "selected_ensemble": {
+              "rows": 4325,
+              "rmse": 1.8078606521757512,
+              "mae": 0.9274989452164137
+            },
+            "gradient_boosting": {
+              "rows": 4325,
+              "rmse": 1.8198326120886834,
+              "mae": 0.9223652188094621
+            },
+            "form_baseline": {
+              "rows": 4325,
+              "rmse": 1.9480943916708566,
+              "mae": 0.9671135256076773
+            }
+          },
+          "regular_players": {
+            "selected_ensemble": {
+              "rows": 1281,
+              "rmse": 2.744671372157071,
+              "mae": 1.9096524700214128
+            },
+            "gradient_boosting": {
+              "rows": 1281,
+              "rmse": 2.75714911981517,
+              "mae": 1.9055559530524604
+            },
+            "form_baseline": {
+              "rows": 1281,
+              "rmse": 2.983818451768362,
+              "mae": 2.1138192818110855
+            }
+          }
+        },
+        {
+          "season": "2025-26",
+          "start_gw": 1,
+          "end_gw": 12,
+          "role": "test",
+          "train_before": 202501,
+          "all_players": {
+            "selected_ensemble": {
+              "rows": 3922,
+              "rmse": 1.9649828305822155,
+              "mae": 1.0296306234524013
+            },
+            "gradient_boosting": {
+              "rows": 3922,
+              "rmse": 1.977681564236761,
+              "mae": 1.0298203552061986
+            },
+            "form_baseline": {
+              "rows": 3922,
+              "rmse": 2.0968229554366773,
+              "mae": 1.1022906037120526
+            }
+          },
+          "regular_players": {
+            "selected_ensemble": {
+              "rows": 1143,
+              "rmse": 2.985572798901521,
+              "mae": 2.0634454431580664
+            },
+            "gradient_boosting": {
+              "rows": 1143,
+              "rmse": 3.0120329689833256,
+              "mae": 2.0739742373335317
+            },
+            "form_baseline": {
+              "rows": 1143,
+              "rmse": 3.2014469192683106,
+              "mae": 2.351473826188393
+            }
+          }
+        },
+        {
+          "season": "2025-26",
+          "start_gw": 13,
+          "end_gw": 25,
+          "role": "test",
+          "train_before": 202513,
+          "all_players": {
+            "selected_ensemble": {
+              "rows": 4552,
+              "rmse": 1.9265907290312385,
+              "mae": 0.9583997902791986
+            },
+            "gradient_boosting": {
+              "rows": 4552,
+              "rmse": 1.9356667963247258,
+              "mae": 0.9774704905888879
+            },
+            "form_baseline": {
+              "rows": 4552,
+              "rmse": 2.0801235739236303,
+              "mae": 1.0259070524684764
+            }
+          },
+          "regular_players": {
+            "selected_ensemble": {
+              "rows": 1211,
+              "rmse": 3.069372485144717,
+              "mae": 2.2258240873018265
+            },
+            "gradient_boosting": {
+              "rows": 1211,
+              "rmse": 3.0763135414528966,
+              "mae": 2.239943989429968
+            },
+            "form_baseline": {
+              "rows": 1211,
+              "rmse": 3.3440488415523117,
+              "mae": 2.4975863611340494
+            }
+          }
+        },
+        {
+          "season": "2025-26",
+          "start_gw": 26,
           "end_gw": 38,
           "role": "test",
+          "train_before": 202526,
           "all_players": {
+            "selected_ensemble": {
+              "rows": 4645,
+              "rmse": 1.6888314383801324,
+              "mae": 0.8542206455497683
+            },
             "gradient_boosting": {
-              "rows": 2139,
-              "rmse": 1.7248433587661147,
-              "mae": 0.8755709659413115
+              "rows": 4645,
+              "rmse": 1.7059506083224945,
+              "mae": 0.862444366270092
             },
             "form_baseline": {
-              "rows": 2139,
-              "rmse": 1.9016388528745802,
-              "mae": 0.9308624754808527
+              "rows": 4645,
+              "rmse": 1.866047995219655,
+              "mae": 0.8931091477073859
             }
           },
           "regular_players": {
+            "selected_ensemble": {
+              "rows": 1148,
+              "rmse": 2.793581394414176,
+              "mae": 2.105750784338641
+            },
             "gradient_boosting": {
-              "rows": 515,
-              "rmse": 2.8717225771036388,
-              "mae": 2.1608108025822412
+              "rows": 1148,
+              "rmse": 2.8156381157323165,
+              "mae": 2.1131033093325198
             },
             "form_baseline": {
-              "rows": 515,
-              "rmse": 3.2142130798628763,
-              "mae": 2.438276699029126
+              "rows": 1148,
+              "rmse": 3.122119334799818,
+              "mae": 2.33794243612079
             }
           }
         }
       ],
-      "training_rows": 39052,
-      "top_features": [
-        {
-          "feature": "minutes_mean3",
-          "importance": 0.292519079078268
+      "training_rows": 86305,
+      "top_features": [],
+      "residual_quantiles_regular": {
+        "p10": -2.67536458715368,
+        "p90": 4.178507962499813
+      },
+      "test_mean_error": -0.005257832099359206,
+      "production_bias": {
+        "regular": 0.005585994982379614,
+        "rotation": -0.015166061371434324,
+        "limited": -0.01450001876666366
+      },
+      "component_training_rows": {
+        "hurdle": {
+          "rows": 59408,
+          "seasons": [
+            "2021-22",
+            "2022-23",
+            "2023-24",
+            "2024-25",
+            "2025-26",
+            "2026-27"
+          ]
         },
-        {
-          "feature": "minutes_last",
-          "importance": 0.19289763125682552
-        },
-        {
-          "feature": "points_last",
-          "importance": 0.13038741536291448
-        },
-        {
-          "feature": "total_points_mean3",
-          "importance": 0.05714035742811876
-        },
-        {
-          "feature": "threat_mean3",
-          "importance": 0.05597630954511661
-        },
-        {
-          "feature": "threat_mean8",
-          "importance": 0.04754463660559739
-        },
-        {
-          "feature": "creativity_mean8",
-          "importance": 0.028816016515145274
-        },
-        {
-          "feature": "expected_goals_mean8",
-          "importance": 0.020508765239493177
-        },
-        {
-          "feature": "total_points_mean8",
-          "importance": 0.0200458843061282
-        },
-        {
-          "feature": "creativity_mean3",
-          "importance": 0.017216747165622954
+        "ridge_recent": {
+          "rows": 39052,
+          "seasons": [
+            "2023-24",
+            "2024-25",
+            "2025-26",
+            "2026-27"
+          ]
         }
-      ]
+      }
     },
     "FWD": {
-      "selected_method": "gradient_boosting",
-      "development_rmse_ml": 3.3578236215736834,
-      "development_rmse_baseline": 3.6137106871017357,
+      "selected_method": "adaptive_ensemble",
+      "recipe": {
+        "components": [
+          "ridge_recent",
+          "hurdle"
+        ],
+        "weights": [
+          0.5,
+          0.5
+        ],
+        "calibration_gain": 0,
+        "objective": 3.2225552246653315,
+        "all_players": {
+          "rows": 4954,
+          "rmse": 2.1039818362116436,
+          "mae": 1.1024713952709506
+        },
+        "regular_players": {
+          "rows": 1166,
+          "rmse": 3.595413020816561,
+          "mae": 2.8237652524503707
+        }
+      },
+      "leaderboard": [
+        {
+          "components": [
+            "ridge_recent",
+            "hurdle"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 0,
+          "objective": 3.2225552246653315,
+          "all_players": {
+            "rows": 4954,
+            "rmse": 2.1039818362116436,
+            "mae": 1.1024713952709506
+          },
+          "regular_players": {
+            "rows": 1166,
+            "rmse": 3.595413020816561,
+            "mae": 2.8237652524503707
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hurdle"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 0.5,
+          "objective": 3.2227376123631526,
+          "all_players": {
+            "rows": 4954,
+            "rmse": 2.1043533047312497,
+            "mae": 1.098317939756514
+          },
+          "regular_players": {
+            "rows": 1166,
+            "rmse": 3.5955323815737867,
+            "mae": 2.83623288876774
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hurdle"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 1,
+          "objective": 3.2236087754300704,
+          "all_players": {
+            "rows": 4954,
+            "rmse": 2.105315319087824,
+            "mae": 1.0963633465773008
+          },
+          "regular_players": {
+            "rows": 1166,
+            "rmse": 3.5963732608774857,
+            "mae": 2.8492645575389357
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hurdle"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 0.5,
+          "objective": 3.224892671280771,
+          "all_players": {
+            "rows": 4954,
+            "rmse": 2.108849716467804,
+            "mae": 1.1099402186719256
+          },
+          "regular_players": {
+            "rows": 1166,
+            "rmse": 3.5969069895517602,
+            "mae": 2.838758696788817
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hurdle"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 0,
+          "objective": 3.2249334057885073,
+          "all_players": {
+            "rows": 4954,
+            "rmse": 2.108721647734883,
+            "mae": 1.1142611056064726
+          },
+          "regular_players": {
+            "rows": 1166,
+            "rmse": 3.597003991806382,
+            "mae": 2.825220733033198
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hurdle"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 1,
+          "objective": 3.225702454109323,
+          "all_players": {
+            "rows": 4954,
+            "rmse": 2.1097074274042336,
+            "mae": 1.1074762289720645
+          },
+          "regular_players": {
+            "rows": 1166,
+            "rmse": 3.597700796344353,
+            "mae": 2.8527506980004937
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hist_smooth"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 0,
+          "objective": 3.225890524548338,
+          "all_players": {
+            "rows": 4954,
+            "rmse": 2.1064969874201522,
+            "mae": 1.1099259913260027
+          },
+          "regular_players": {
+            "rows": 1166,
+            "rmse": 3.5990217035910663,
+            "mae": 2.8275106714734766
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hist_smooth"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 0.5,
+          "objective": 3.2260842070247167,
+          "all_players": {
+            "rows": 4954,
+            "rmse": 2.1068801728406616,
+            "mae": 1.1044610174396632
+          },
+          "regular_players": {
+            "rows": 1166,
+            "rmse": 3.599152218419402,
+            "mae": 2.841172079502826
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hist_smooth"
+          ],
+          "weights": [
+            0.5,
+            0.5
+          ],
+          "calibration_gain": 1,
+          "objective": 3.2271555388389945,
+          "all_players": {
+            "rows": 4954,
+            "rmse": 2.107968613882261,
+            "mae": 1.1018973233288063
+          },
+          "regular_players": {
+            "rows": 1166,
+            "rmse": 3.600217847157906,
+            "mae": 2.855357703352806
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hist_smooth"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 0.5,
+          "objective": 3.228142003852003,
+          "all_players": {
+            "rows": 4954,
+            "rmse": 2.1110832972073084,
+            "mae": 1.1135846551127768
+          },
+          "regular_players": {
+            "rows": 1166,
+            "rmse": 3.600494906066901,
+            "mae": 2.842667662397901
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hist_smooth"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 0,
+          "objective": 3.2282100226409276,
+          "all_players": {
+            "rows": 4954,
+            "rmse": 2.1109632541920305,
+            "mae": 1.1185836229251638
+          },
+          "regular_players": {
+            "rows": 1166,
+            "rmse": 3.6006256121238933,
+            "mae": 2.828408368241309
+          }
+        },
+        {
+          "components": [
+            "ridge_recent",
+            "hist_smooth"
+          ],
+          "weights": [
+            0.75,
+            0.25
+          ],
+          "calibration_gain": 1,
+          "objective": 3.2290255594695205,
+          "all_players": {
+            "rows": 4954,
+            "rmse": 2.1119931331744817,
+            "mae": 1.1109009504470562
+          },
+          "regular_players": {
+            "rows": 1166,
+            "rmse": 3.601369701567867,
+            "mae": 2.8572503441632264
+          }
+        }
+      ],
+      "development_rmse_ml": 3.595413020816561,
+      "development_rmse_baseline": 3.953900805428577,
+      "development_rows": 4954,
       "test_all_players": {
-        "rows": 535,
-        "rmse": 2.1775475855716797,
-        "mae": 1.1106522665311545
+        "rows": 3235,
+        "rmse": 2.070219852207252,
+        "mae": 1.0721074338578285
       },
       "test_regular_players": {
-        "rows": 141,
-        "rmse": 3.5854329730334533,
-        "mae": 2.6987694301398824
+        "rows": 806,
+        "rmse": 3.343851745077345,
+        "mae": 2.499190829972061
       },
+      "test_legacy_all_players": {
+        "rows": 3235,
+        "rmse": 2.0852384781769766,
+        "mae": 1.0915361930904277
+      },
+      "test_legacy_regular_players": {
+        "rows": 806,
+        "rmse": 3.379798591528345,
+        "mae": 2.562343475909909
+      },
+      "test_baseline_all_players": {
+        "rows": 3235,
+        "rmse": 2.2223543960922414,
+        "mae": 1.1154483883360982
+      },
+      "test_baseline_regular_players": {
+        "rows": 806,
+        "rmse": 3.6176938351474024,
+        "mae": 2.7335582092638546
+      },
+      "test_gameweek_totals": {
+        "rows": 3235,
+        "rmse": 2.080822573838467,
+        "mae": 1.0799638722232157
+      },
+      "test_gameweek_regular_players": {
+        "rows": 806,
+        "rmse": 3.363922292750798,
+        "mae": 2.5191148946866355
+      },
+      "rmse_change_vs_legacy_percent": -1.0635795440918527,
       "blocks": [
         {
-          "start_gw": 21,
-          "end_gw": 26,
+          "season": "2023-24",
+          "start_gw": 20,
+          "end_gw": 38,
           "role": "development",
+          "train_before": 202320,
           "all_players": {
+            "selected_ensemble": {
+              "rows": 1970,
+              "rmse": 1.9998038130622642,
+              "mae": 0.9717560950347038
+            },
             "gradient_boosting": {
-              "rows": 535,
-              "rmse": 2.006049412952007,
-              "mae": 1.083729585894678
+              "rows": 1970,
+              "rmse": 2.016834281352488,
+              "mae": 0.9751529144341666
             },
             "form_baseline": {
-              "rows": 535,
-              "rmse": 2.15517036423317,
-              "mae": 1.1166869158878505
+              "rows": 1970,
+              "rmse": 2.139683305925008,
+              "mae": 0.9963194869148807
             }
           },
           "regular_players": {
+            "selected_ensemble": {
+              "rows": 401,
+              "rmse": 3.482120917133739,
+              "mae": 2.597917211571477
+            },
             "gradient_boosting": {
-              "rows": 137,
-              "rmse": 3.138160347988915,
-              "mae": 2.471438306422954
+              "rows": 401,
+              "rmse": 3.543884196511645,
+              "mae": 2.6632967662483855
             },
             "form_baseline": {
-              "rows": 137,
-              "rmse": 3.412479569335381,
-              "mae": 2.6627919708029197
+              "rows": 401,
+              "rmse": 3.77099116446696,
+              "mae": 2.913268911055694
             }
           }
         },
         {
-          "start_gw": 27,
-          "end_gw": 32,
+          "season": "2024-25",
+          "start_gw": 1,
+          "end_gw": 12,
           "role": "development",
+          "train_before": 202401,
           "all_players": {
+            "selected_ensemble": {
+              "rows": 881,
+              "rmse": 2.3543037201948893,
+              "mae": 1.3571438471493549
+            },
             "gradient_boosting": {
-              "rows": 534,
-              "rmse": 2.0994375750223933,
-              "mae": 1.0793815389354329
+              "rows": 881,
+              "rmse": 2.3847602797210548,
+              "mae": 1.3367218319456926
             },
             "form_baseline": {
-              "rows": 534,
-              "rmse": 2.252048530051877,
-              "mae": 1.103343534044308
+              "rows": 881,
+              "rmse": 2.561493444431471,
+              "mae": 1.382603436563403
             }
           },
           "regular_players": {
+            "selected_ensemble": {
+              "rows": 253,
+              "rmse": 3.8275595391823645,
+              "mae": 3.0376813446416446
+            },
             "gradient_boosting": {
-              "rows": 133,
-              "rmse": 3.5699893191053538,
-              "mae": 2.64862395301501
+              "rows": 253,
+              "rmse": 3.8861322704810393,
+              "mae": 3.0534910915139952
             },
             "form_baseline": {
-              "rows": 133,
-              "rmse": 3.809897111466508,
-              "mae": 2.8061951754385968
+              "rows": 253,
+              "rmse": 4.164901634352659,
+              "mae": 3.271002964426877
             }
           }
         },
         {
-          "start_gw": 33,
+          "season": "2024-25",
+          "start_gw": 13,
+          "end_gw": 25,
+          "role": "development",
+          "train_before": 202413,
+          "all_players": {
+            "selected_ensemble": {
+              "rows": 1005,
+              "rmse": 2.2890660148801785,
+              "mae": 1.250754864229956
+            },
+            "gradient_boosting": {
+              "rows": 1005,
+              "rmse": 2.313517153628263,
+              "mae": 1.26508441775575
+            },
+            "form_baseline": {
+              "rows": 1005,
+              "rmse": 2.49510004404743,
+              "mae": 1.3096693358537457
+            }
+          },
+          "regular_players": {
+            "selected_ensemble": {
+              "rows": 286,
+              "rmse": 3.733556351002032,
+              "mae": 2.9938626416030063
+            },
+            "gradient_boosting": {
+              "rows": 286,
+              "rmse": 3.782654825595356,
+              "mae": 2.9985551890789646
+            },
+            "form_baseline": {
+              "rows": 286,
+              "rmse": 4.085781506084375,
+              "mae": 3.2765552156177153
+            }
+          }
+        },
+        {
+          "season": "2024-25",
+          "start_gw": 26,
+          "end_gw": 38,
+          "role": "development",
+          "train_before": 202426,
+          "all_players": {
+            "selected_ensemble": {
+              "rows": 1098,
+              "rmse": 1.8852394058856787,
+              "mae": 0.996932073828994
+            },
+            "gradient_boosting": {
+              "rows": 1098,
+              "rmse": 1.904319003040526,
+              "mae": 0.9694249536389464
+            },
+            "form_baseline": {
+              "rows": 1098,
+              "rmse": 2.1080920944541686,
+              "mae": 1.0153725261677389
+            }
+          },
+          "regular_players": {
+            "selected_ensemble": {
+              "rows": 226,
+              "rmse": 3.337571038454542,
+              "mae": 2.769767198337053
+            },
+            "gradient_boosting": {
+              "rows": 226,
+              "rmse": 3.382744876674938,
+              "mae": 2.731011567971409
+            },
+            "form_baseline": {
+              "rows": 226,
+              "rmse": 3.8575757390814127,
+              "mae": 3.100451696165192
+            }
+          }
+        },
+        {
+          "season": "2025-26",
+          "start_gw": 1,
+          "end_gw": 12,
+          "role": "test",
+          "train_before": 202501,
+          "all_players": {
+            "selected_ensemble": {
+              "rows": 962,
+              "rmse": 2.0788792460786487,
+              "mae": 1.1291149617043492
+            },
+            "gradient_boosting": {
+              "rows": 962,
+              "rmse": 2.076912345617211,
+              "mae": 1.1064338307848027
+            },
+            "form_baseline": {
+              "rows": 962,
+              "rmse": 2.216879126521725,
+              "mae": 1.1202010054231661
+            }
+          },
+          "regular_players": {
+            "selected_ensemble": {
+              "rows": 224,
+              "rmse": 3.2517623018729243,
+              "mae": 2.5661753605116884
+            },
+            "gradient_boosting": {
+              "rows": 224,
+              "rmse": 3.225920604050007,
+              "mae": 2.541894144308702
+            },
+            "form_baseline": {
+              "rows": 224,
+              "rmse": 3.520804763164672,
+              "mae": 2.723463541666667
+            }
+          }
+        },
+        {
+          "season": "2025-26",
+          "start_gw": 13,
+          "end_gw": 25,
+          "role": "test",
+          "train_before": 202513,
+          "all_players": {
+            "selected_ensemble": {
+              "rows": 1113,
+              "rmse": 2.034266049540299,
+              "mae": 1.0339853437170126
+            },
+            "gradient_boosting": {
+              "rows": 1113,
+              "rmse": 2.0558795359434043,
+              "mae": 1.0863393567854305
+            },
+            "form_baseline": {
+              "rows": 1113,
+              "rmse": 2.1665847094034456,
+              "mae": 1.0949966554291963
+            }
+          },
+          "regular_players": {
+            "selected_ensemble": {
+              "rows": 286,
+              "rmse": 3.3200498704187527,
+              "mae": 2.4230689566203645
+            },
+            "gradient_boosting": {
+              "rows": 286,
+              "rmse": 3.3696819680975154,
+              "mae": 2.530917254557981
+            },
+            "form_baseline": {
+              "rows": 286,
+              "rmse": 3.5417208227211447,
+              "mae": 2.668503787878788
+            }
+          }
+        },
+        {
+          "season": "2025-26",
+          "start_gw": 26,
           "end_gw": 38,
           "role": "test",
+          "train_before": 202526,
           "all_players": {
+            "selected_ensemble": {
+              "rows": 1160,
+              "rmse": 2.097047180815659,
+              "mae": 1.0614079894943589
+            },
             "gradient_boosting": {
-              "rows": 535,
-              "rmse": 2.1775475855716797,
-              "mae": 1.1106522665311545
+              "rows": 1160,
+              "rmse": 2.119814083941915,
+              "mae": 1.0841677028710082
             },
             "form_baseline": {
-              "rows": 535,
-              "rmse": 2.3284360505992856,
-              "mae": 1.180833525761353
+              "rows": 1160,
+              "rmse": 2.2790060646400865,
+              "mae": 1.1311300789288763
             }
           },
           "regular_players": {
+            "selected_ensemble": {
+              "rows": 296,
+              "rmse": 3.434274751108948,
+              "mae": 2.522050022329186
+            },
             "gradient_boosting": {
-              "rows": 141,
-              "rmse": 3.5854329730334533,
-              "mae": 2.6987694301398824
+              "rows": 296,
+              "rmse": 3.5011766314034367,
+              "mae": 2.608183170454915
             },
             "form_baseline": {
-              "rows": 141,
-              "rmse": 3.7721425597461926,
-              "mae": 2.855961879432624
+              "rows": 296,
+              "rmse": 3.7598750469749604,
+              "mae": 2.804054054054054
             }
           }
         }
       ],
-      "training_rows": 10326,
-      "top_features": [
-        {
-          "feature": "minutes_last",
-          "importance": 0.13313270283876522
+      "training_rows": 25357,
+      "top_features": [],
+      "residual_quantiles_regular": {
+        "p10": -2.7800198333234043,
+        "p90": 5.114405964838797
+      },
+      "test_mean_error": 0.018902855406268293,
+      "production_bias": {
+        "regular": 0.024581950930357106,
+        "rotation": 0.09906092674608671,
+        "limited": -0.048077364779783034
+      },
+      "component_training_rows": {
+        "ridge_recent": {
+          "rows": 10326,
+          "seasons": [
+            "2023-24",
+            "2024-25",
+            "2025-26",
+            "2026-27"
+          ]
         },
-        {
-          "feature": "threat_mean3",
-          "importance": 0.11206692222533583
-        },
-        {
-          "feature": "points_last",
-          "importance": 0.11084488600816093
-        },
-        {
-          "feature": "expected_goals_mean3",
-          "importance": 0.09212537658248651
-        },
-        {
-          "feature": "influence_mean3",
-          "importance": 0.0694371287502749
-        },
-        {
-          "feature": "minutes_mean3",
-          "importance": 0.057993303057397326
-        },
-        {
-          "feature": "total_points_mean3",
-          "importance": 0.057472177687424034
-        },
-        {
-          "feature": "starts_mean3",
-          "importance": 0.04430281693569597
-        },
-        {
-          "feature": "minutes_mean8",
-          "importance": 0.03875486571197125
-        },
-        {
-          "feature": "expected_goals_conceded_mean3",
-          "importance": 0.029471214261710184
+        "hurdle": {
+          "rows": 16346,
+          "seasons": [
+            "2021-22",
+            "2022-23",
+            "2023-24",
+            "2024-25",
+            "2025-26",
+            "2026-27"
+          ]
         }
-      ]
+      }
     }
   },
   "limitations": [
-    "Historical fixture assignments are final schedules, not archived deadline snapshots.",
-    "Rule changes affect comparability of older seasons; scoring era is a feature.",
-    "Forecasts are estimates, and later weeks reuse the latest observed player form."
-  ]
+    "Historical tests use final schedules, not archived deadline availability or fixture snapshots.",
+    "The old model previously reported the last six GWs of the historical test season; this is an expanded historical benchmark, not a new prospective experiment.",
+    "Rules and bonus scoring changed across seasons; older data is downweighted and missing-stat indicators are retained.",
+    "Longer-horizon forecasts reuse current form and availability; historical tests assess one-GW forecasts.",
+    "Future outcomes have irreducible uncertainty; lower historical error does not guarantee better future results."
+  ],
+  "development_rows": 42029,
+  "test_rows": 29338,
+  "aggregate_test_regular": {
+    "selected": {
+      "rows": 8202,
+      "rmse": 3.013625984115342,
+      "mae": 2.2378889596159515
+    },
+    "legacy": {
+      "rows": 8202,
+      "rmse": 3.042087589518148,
+      "mae": 2.262886979801939
+    },
+    "baseline": {
+      "rows": 8202,
+      "rmse": 3.304065941949866,
+      "mae": 2.495890103023653
+    }
+  },
+  "aggregate_test_all": {
+    "selected": {
+      "rows": 29338,
+      "rmse": 1.9204322602594104,
+      "mae": 0.9778138318602807
+    },
+    "legacy": {
+      "rows": 29338,
+      "rmse": 1.9369418888982668,
+      "mae": 0.987472525548262
+    },
+    "baseline": {
+      "rows": 29338,
+      "rmse": 2.0853740819482263,
+      "mae": 1.0363958389796672
+    }
+  }
 }

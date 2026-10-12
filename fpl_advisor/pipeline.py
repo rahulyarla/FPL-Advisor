@@ -12,8 +12,12 @@ from .http import Client, DataError, utc_now, write_json
 from .model import train, forecast
 from .selection import recommend
 from .analytics import build_analytics
+from .feedback import archive_snapshot, reconcile, evaluate_feedback
 
 _LOCK = threading.Lock()
+FIXTURE_FIELDS = ["id", "event", "team_h", "team_a", "finished", "finished_provisional",
+                  "team_h_score", "team_a_score", "kickoff_time", "team_h_difficulty", "team_a_difficulty",
+                  "team_h_xg", "team_a_xg"]
 
 
 def load_config(root):
@@ -28,7 +32,7 @@ def load_config(root):
 def cached_inputs(root):
     data = Path(root) / "data"
     try:
-        history = pd.read_csv(data / "history.csv.gz")
+        history = pd.read_csv(data / "history.csv.gz", float_precision="round_trip")
         fixtures = {s: pd.DataFrame(rows) for s, rows in json.loads((data / "fixtures.json").read_text()).items()}
         bootstrap = json.loads((data / "bootstrap.json").read_text())
         manifest = json.loads((data / "manifest.json").read_text())
@@ -43,21 +47,39 @@ def run(root, offline=False, cached=False, force=False, progress=lambda message:
         raise DataError("A refresh is already running.")
     try:
         config = load_config(root)
+        # Preserve the last genuine online snapshot before replacing reports.
+        old_report, old_bootstrap = root / "reports/snapshot.json", root / "data/bootstrap.json"
+        if old_report.exists() and old_bootstrap.exists():
+            try:
+                archive_snapshot(root, json.loads(old_report.read_text()), json.loads(old_bootstrap.read_text()), "saved_online_snapshot")
+            except (ValueError, KeyError, TypeError, OSError) as exc:
+                progress(f"Previous snapshot could not be archived; continuing the fresh refresh: {exc}")
         if cached:
             history, fixture_sets, bootstrap, manifest = cached_inputs(root)
             progress("Using the saved data snapshot")
         else:
             client = Client(root / "data/http", timeout=config.get("request_timeout", 40), offline=offline)
             history, fixture_sets, bootstrap, manifest = sync(client, config, progress)
+            if config.get("external_team_xg", True):
+                from .external import enrich_fixture_sets
+                fixture_sets = enrich_fixture_sets(client, fixture_sets, bootstrap, manifest, config, progress)
         progress("Building features from information available before each gameweek")
+        current_history = history[history.season == manifest["season"]]
+        if (not current_history.gw.isin(manifest["completed_gameweeks"]).all()
+                or (current_history.gw >= int(manifest["next_gameweek"])).any()):
+            raise DataError("Saved history and manifest disagree about finalized gameweeks. Refresh online before training.")
         training = build_training_frame(history, fixture_sets)
-        bundle, retrained = train(training, root / "models", progress, force=force)
+        bundle, retrained = train(training, root / "models", progress, force=force, search=config.get("model_search", "standard"))
+        progress("Matching archived forecasts with finalized results and checking error corrections")
+        matched, feedback_warnings = reconcile(root, history, manifest)
+        feedback = evaluate_feedback(matched, feedback_warnings, config.get("feedback_min_gameweeks", 3))
         progress("Predicting upcoming fixtures and player points")
         predictions, weeks = forecast(history, fixture_sets[manifest["season"]], bootstrap,
-                                      manifest, bundle, config["horizon"], config["discount"])
+                                      manifest, bundle, config["horizon"], config["discount"], feedback)
         manifest = {**manifest, "forecast_created_at": utc_now(), "forecast_weeks": weeks,
                     "model_retrained": retrained, "model_trained_at": bundle["report"]["created_at"],
                     "model_fingerprint": bundle["fingerprint"], "cached_run": bool(cached),
+                    "model_version": bundle.get("model_version"), "model_trained_through": bundle.get("trained_through", int(training.order.max())),
                     "offline_run": bool(offline)}
         progress("Saving forecasts and validation results")
         data = root / "data"
@@ -68,14 +90,30 @@ def run(root, offline=False, cached=False, force=False, progress=lambda message:
         history.to_csv(data / "history.csv.gz.tmp", index=False, compression="gzip")
         (data / "history.csv.gz.tmp").replace(data / "history.csv.gz")
         write_json(data / "bootstrap.json", bootstrap)
-        write_json(data / "fixtures.json", {s: json.loads(df.to_json(orient="records")) for s, df in fixture_sets.items()})
+        write_json(data / "fixtures.json", {s: json.loads(df[[c for c in FIXTURE_FIELDS if c in df]].to_json(orient="records", double_precision=15))
+                                           for s, df in fixture_sets.items()})
         predictions.to_csv(reports / "player_forecasts.csv.tmp", index=False)
         (reports / "player_forecasts.csv.tmp").replace(reports / "player_forecasts.csv")
         write_json(reports / "model_checks.json", bundle["report"])
-        write_json(reports / "player_analytics.json", build_analytics(history, predictions, manifest))
+        analytics = build_analytics(history, predictions, manifest)
+        for element, player in analytics.get("players", {}).items():
+            player["recorded_predictions"] = feedback["player_predictions"].get(element, [])
+        analytics["note"] += " Recorded predictions are real dated pre-deadline forecasts; legacy versions are labeled in the forecast-results download and do not tune version 3."
+        write_json(reports / "player_analytics.json", analytics)
+        write_json(reports / "prediction_feedback.json", feedback)
+        if not matched.empty:
+            matched.to_csv(reports / "forecast_results.csv.tmp", index=False)
+            (reports / "forecast_results.csv.tmp").replace(reports / "forecast_results.csv")
+        else:
+            (reports / "forecast_results.csv").unlink(missing_ok=True)
+        if (root / "models/backtest_predictions.csv.gz").exists():
+            import shutil
+            shutil.copyfile(root / "models/backtest_predictions.csv.gz", reports / "backtest_predictions.csv.gz")
         write_json(data / "manifest.json", manifest)
-        write_json(reports / "snapshot.json", {"manifest": manifest, "validation": bundle["report"],
-                                               "players": json.loads(predictions.to_json(orient="records"))})
+        snapshot = {"manifest": manifest, "validation": bundle["report"], "feedback": feedback,
+                    "players": json.loads(predictions.to_json(orient="records"))}
+        archive_snapshot(root, snapshot, bootstrap)
+        write_json(reports / "snapshot.json", snapshot)
         progress(f"Ready: {manifest['season']} GW{manifest['next_gameweek']}, {len(predictions)} players")
         return manifest
     finally:

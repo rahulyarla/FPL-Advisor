@@ -1,4 +1,4 @@
-# FPL Advisor v2
+# FPL Advisor v3
 
 A working local FPL dashboard with trained player forecasts, a best XI and captain,
 transfer comparisons, and a wildcard builder. It follows the position-specific
@@ -6,7 +6,19 @@ gradient-boosted regression approach in [Benjamin Tindal's FPL-Auto](https://git
 The application code is a new implementation, with a current-data pipeline and a
 different squad optimizer. It is not a claim to reproduce that project's season scores.
 
-## What's new in v2
+## What's new in v3
+
+- **Larger development data:** eight complete historical seasons plus finalized current GWs, currently 202,738 player–GW observations. Validation has 42,029 predictions across two seasons; the separate historical test covers all 38 GWs of 2025–26 with 29,338 predictions.
+- **Tuned position ensembles:** compare eight candidate methods and blends, including regularized boosting, a regularized linear model and a model of playing chance followed by points conditional on playing. Development chooses the useful history window instead of assuming that older data always helps.
+- **Error learning:** retrain on new finalized results; tune shrinkage corrections using earlier out-of-fold prediction errors. Save real forecasts before deadlines and compare them with actual FPL points. Small live corrections require at least three finalized version 3 GWs and must pass a chronological accuracy check.
+- **More information:** longer form, playing-time consistency, attacking output per 90, clean-sheet context and verified Understat team xG. Missing old statistics are marked and older scoring eras are downweighted.
+- **Visible accuracy:** Model checks shows RMSE, MAE, the estimator reference, data coverage and the live forecast-error history. Player graphs can overlay recorded pre-deadline predictions. Historical predictions/actuals are downloadable.
+
+On the same full-season regular-player test, selected RMSE was **3.014** points per fixture versus **3.042** for the fixed gradient-boosting reference and **3.304** for recent form. The gain over the reference is about **1%**, with lower RMSE in every position. This is a historical result, not a guarantee of future improvement. See [MODEL_DEVELOPMENT.md](MODEL_DEVELOPMENT.md) for the protocol, position results and limits.
+
+Open **Model checks** after starting the dashboard. The live error table starts empty until a saved forecast's GW is finalized. Historical backtests are not presented as predictions that were made live.
+
+## Rivals and graphs retained from v2
 
 - **Optional rivals:** add any number of FPL entry IDs or official team URLs, including bulk imports. Include/exclude and remove individual rivals. Their snapshots are saved by season in `user/rivals.json` and refreshed with the local dashboard's scheduled data update.
 - **Two recommendations:** the usual points-first plan remains available. Check **Also build a version that considers my rivals** to calculate both versions, then switch between **Standard plan** and **With rivals**. This works for lineups, transfers and wildcards.
@@ -41,12 +53,12 @@ Close the old adviser's command window first. Download this repository with
 **Code → Download ZIP**, extract the entire ZIP, open the extracted project
 folder, and double-click **START_WINDOWS.bat**. Your saved squad uses the same
 browser address and season. If updating a v2 copy that already has saved rivals,
-copy its `user/` folder into the new project before starting it. Never upload
+copy its `user/` folder and `data/forecast_archive/` folder into the new project before starting it. The forecast archive preserves your accuracy history. Never upload
 that folder to GitHub.
 
 ## Start on Windows
 
-1. Install **Python 3.11 or newer** from [python.org](https://www.python.org/downloads/) if needed.
+1. Install **Python 3.12 or 3.13 (64-bit)** from [python.org](https://www.python.org/downloads/) if needed.
 2. Extract the entire ZIP into a normal folder. Do not run the launcher inside the ZIP.
 3. Double-click **START_WINDOWS.bat**. The first launch installs the required Python packages.
 4. Your browser opens the dashboard at **http://127.0.0.1:8765**. Keep the terminal window open.
@@ -110,44 +122,15 @@ scoped to their season; stable FPL player codes carry past form across seasons.
 
 ## Model and validation
 
-- One `sklearn.ensemble.GradientBoostingRegressor` for GK, DEF, MID and FWD.
-- The original core settings: 110 trees, learning rate 0.1, maximum depth 3,
-  and position-specific maximum features of 5/10/20/10.
-- Added regularization: minimum 15 samples per leaf; reproducible random seed.
-- Rolling averages of prior points, minutes, goals, assists, xG/xA, saves,
-  defensive contribution and other statistics over 3 and 8 recorded gameweeks.
-- Team and opponent context uses results strictly before the predicted GW;
-  home/away and scheduled match counts are fixture metadata.
-- Double-gameweek rows are aggregated before lagging. A later match in the
-  same GW cannot supply form for an earlier match in that GW.
-- Scraped `xP`, same-GW performance and final-season cumulative totals are
-  excluded from the feature list. Prices/ownership are shown in the UI but are
-  not retrospective training features.
-- Points and past statistics are normalized per scheduled fixture. Predictions
-  are made for each upcoming fixture and summed into gameweek totals. Blank GWs
-  get zero points and double GWs sum both fixtures.
+All performance features are lagged by a whole gameweek. Double-GW player records are summed before lagging and normalized per scheduled fixture. Same-GW results, scraped `xP`, final-season totals, current ownership and current prices are excluded from historical model inputs. The forecast predicts each scheduled fixture and sums its points into a GW total; blank weeks receive zero.
 
-The latest complete historical season is used for forward validation:
+Development uses four rolling blocks across two historical seasons. It compares eight candidate methods, short/long history windows, blends and small residual corrections. Each fold trains strictly before its first GW; no player rows are randomly split. The recipe is written to `models/frozen_recipe_POSITION.json` before any test prediction. Testing covers the next full season in three forward blocks; earlier test results can enter later-block model fitting, but never alter the frozen recipe or its test calibration.
 
-| Block | Purpose | Model training |
-|---|---|---|
-| GW21–26 | Development | Only records before GW21 |
-| GW27–32 | Development | Only records before GW27 |
-| GW33–38 | Separate test | Only records before GW33 |
+Production refits the selected history windows on the latest finalized results. Out-of-fold historical errors supply conservative residual calibration if it won development. The current selected models blend a playing-chance model with regularized linear or boosting models. Their windows cover four to six available seasons; the eight-season pool remains available to the search. Model checks reports pool size, while `reports/model_checks.json` records the exact component training rows/seasons.
 
-Development scores select gradient boosting or a simple recent-form baseline for
-each position. The baseline is `0.65 × previous-three-GW mean points + 0.35 ×
-previous-eight-GW mean points`, with a training-only position prior for new players.
-Method selection uses players with pre-GW recent average minutes of at least 45
-where enough such records exist. The untouched final block reports the selected
-method's RMSE and MAE. After that evaluation, the selected method is fitted on all
-available completed data for live forecasts. Historical test statistics are not
-claimed to be independent live forecasts for this season.
+Every genuine online refresh saves the latest pre-deadline forecast for that origin GW in `data/forecast_archive/`. Finalized actuals are matched by season, ID and stable code. Repeated refreshes count once per player/GW/horizon. The application retains forecasts for all horizons; live corrections are learned from one-GW forecasts of the current model family and apply only to the next GW. A correction must improve later-GW RMSE without increasing MAE and is capped at 0.5 points per fixture before its learned gain and availability adjustment. Legacy saved forecasts are auditable but cannot tune version 3.
 
-The dashboard reports both the method and its errors; the full per-position,
-per-block results and feature importances are in `reports/model_checks.json`.
-Models are retrained when the normalized feature/target data changes or the
-scikit-learn version changes, rather than needlessly on every price refresh.
+Retraining is automatic when finalized features/targets, tuning specifications, model version, search mode or scikit-learn version change. A price-only refresh reuses the model. `reports/backtest_predictions.csv.gz` contains development/test predictions and actuals; `reports/forecast_results.csv` appears once a saved forecast has a finalized result. Detailed design and research: [MODEL_DEVELOPMENT.md](MODEL_DEVELOPMENT.md).
 
 ## Squad decisions
 
@@ -218,11 +201,11 @@ the command line, fill a copy of `team.example.json` and pass `--team-json`.
 enabled on Benjamin Tindal's repository and no changes were pushed there.
 
 1. Put this project's source files in your own GitHub repository's default branch.
-   Generated `data/`, `models/`, `reports/` and `user/` files are ignored by Git.
+   The included normalized snapshot/models can be kept. New runtime files are ignored by Git; the workflow deliberately commits only the public forecast archive. Never commit `user/`.
 2. Open **Actions → Refresh FPL forecasts → Run workflow** for the first run.
 3. The workflow then runs at **05:17 and 17:17 UTC** and produces downloadable
    `fpl-forecasts` artifacts containing the forecast CSV, snapshot, model checks
-   and data manifest. It does not write team changes to FPL.
+   and data manifest, plus the forecast archive (90-day retention subject to repository settings). It caches downloads/models and commits only public player forecasts in `data/forecast_archive/` so feedback survives separate runs. It does not write team changes to FPL.
 
 The workflow is a background report generator, not a hosted interactive dashboard.
 To see a scheduled result locally, extract its `reports/` directory into this
@@ -234,7 +217,7 @@ Actions to remain enabled; review the run status before relying on a deadline up
 `fpl_advisor/` contains the data client, feature generation, model, optimizer, CLI
 and dashboard. `data/manifest.json` records source URLs, SHA-256 hashes, snapshot
 time, gameweek coverage and warnings. The ZIP includes trained models and a saved
-data snapshot, plus a reference wildcard in `reports/example_wildcard.json`.
+data snapshot, plus a reference wildcard in `reports/example_wildcard.json`. Optional team xG is sourced from [Understat](https://understat.com/league/EPL); its source URLs and hashes are recorded in the manifest.
 That reference squad is a £100m example, not your imported team.
 
 Vaastav Anand's source license is preserved in `VAastav_LICENSE.txt`. The data is

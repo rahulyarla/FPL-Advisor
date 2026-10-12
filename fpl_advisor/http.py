@@ -1,6 +1,8 @@
 """Small GET-only HTTP client, with conditional downloads and bounded retries."""
 
+import gzip
 import hashlib
+import io
 import json
 import time
 import urllib.error
@@ -33,7 +35,7 @@ class Client:
         self.offline = offline
         self.sources = []
 
-    def get(self, url, cache=True, optional=False):
+    def get(self, url, cache=True, optional=False, extra_headers=None):
         key = hashlib.sha256(url.encode()).hexdigest()
         payload = self.root / (key + ".bin")
         meta = self.root / (key + ".json")
@@ -46,7 +48,8 @@ class Client:
             body = payload.read_bytes()
             self.sources.append({**previous, "offline": True})
             return body
-        headers = {"User-Agent": "FPL-Advisor/2.0 (personal research)", "Accept": "*/*"}
+        headers = {"User-Agent": "FPL-Advisor/3.0 (personal research)", "Accept": "*/*"}
+        headers.update(extra_headers or {})
         if cache and payload.exists() and previous.get("etag"):
             headers["If-None-Match"] = previous["etag"]
         # Live JSON is fetched afresh so that stale prices/flags cannot masquerade as current.
@@ -57,6 +60,11 @@ class Client:
                     body = response.read(40 * 1024 * 1024 + 1)
                     if len(body) > 40 * 1024 * 1024:
                         raise DataError(f"Response is unexpectedly large: {url}")
+                    if body[:2] == b"\x1f\x8b":
+                        with gzip.GzipFile(fileobj=io.BytesIO(body)) as compressed:
+                            body = compressed.read(40 * 1024 * 1024 + 1)
+                        if len(body) > 40 * 1024 * 1024:
+                            raise DataError(f"Decompressed response is unexpectedly large: {url}")
                     details = {"url": url, "sha256": hashlib.sha256(body).hexdigest(),
                                "etag": response.headers.get("ETag"), "fetched_at": utc_now()}
                     temp = payload.with_suffix(".tmp")

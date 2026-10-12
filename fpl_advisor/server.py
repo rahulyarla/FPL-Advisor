@@ -94,6 +94,13 @@ def make_handler(root, job, port):
                     self.send(200, player_analytics(root))
                 elif path == "/forecasts.csv":
                     self.send(200, (root / "reports/player_forecasts.csv").read_bytes(), "text/csv; charset=utf-8")
+                elif path in ("/backtest.csv.gz", "/forecast-results.csv"):
+                    filename = "backtest_predictions.csv.gz" if path.endswith(".gz") else "forecast_results.csv"
+                    report = root / "reports" / filename
+                    if not report.exists():
+                        self.send(404, {"error": "No evaluated observations for this download yet."})
+                    else:
+                        self.send(200, report.read_bytes(), "application/gzip" if path.endswith(".gz") else "text/csv; charset=utf-8")
                 else:
                     self.send(404, {"error": "Not found"})
             except Exception as exc:

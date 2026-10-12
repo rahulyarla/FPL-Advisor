@@ -50,7 +50,11 @@ def bool_value(value):
 
 def csv_from_bytes(body):
     try:
-        return pd.read_csv(io.BytesIO(body))
+        try:
+            return pd.read_csv(io.BytesIO(body), encoding="utf-8-sig")
+        except UnicodeDecodeError:
+            # Older Vaastav exports use Windows-1252 for accented player names.
+            return pd.read_csv(io.BytesIO(body), encoding="cp1252")
     except (pd.errors.ParserError, UnicodeDecodeError, pd.errors.EmptyDataError) as exc:
         raise DataError("A source CSV is empty or malformed.") from exc
 
@@ -86,7 +90,8 @@ def normalize_vaastav(raw, players, fixtures, season):
                "name": r.get("name", player.get("web_name", str(r["element"]))),
                "team_id": int(f["team_h"] if home else f["team_a"]),
                "home_count": int(home), "fixture_count": 1,
-               "defensive_stats_available": int("defensive_contribution" in raw)}
+               "defensive_stats_available": int("defensive_contribution" in raw),
+               "xg_stats_available": int("expected_goals" in raw)}
         for stat in STATS:
             value = r.get(stat, 0)
             rec[stat] = float(value) if pd.notna(value) else 0.0
@@ -101,6 +106,8 @@ def aggregate_gameweeks(df):
     spec = {s: "sum" for s in STATS}
     spec.update({"code": "last", "position": "last", "name": "last", "team_id": "last",
                  "home_count": "sum", "fixture_count": "sum", "defensive_stats_available": "max"})
+    if "xg_stats_available" in df:
+        spec["xg_stats_available"] = "max"
     result = df.groupby(keys, as_index=False).agg(spec)
     if (result.fixture_count <= 0).any() or not result.position.isin(POSITIONS.values()).all():
         raise DataError("Invalid player/gameweek records.")
@@ -155,7 +162,8 @@ def official_gameweek(client, bootstrap, fixtures, season, gw, warnings, summary
                "name": f"{p['first_name']} {p['second_name']}", "team_id": team_id,
                "fixture_count": len(assigned),
                "home_count": sum(int(int(f["team_h"]) == team_id) for f in assigned),
-               "defensive_stats_available": int("defensive_contribution" in stats)}
+               "defensive_stats_available": int("defensive_contribution" in stats),
+               "xg_stats_available": int("expected_goals" in stats)}
         for stat in STATS:
             rec[stat] = float(stats.get(stat, 0) or 0)
         records.append(rec)
@@ -191,9 +199,9 @@ def sync(client, config, progress=lambda message: None):
     fixture_sets = {}
     history_manifest = []
     automatic = config["historical_seasons"] == "auto"
-    count = int(config.get("history_seasons_to_use", 3))
-    if not 1 <= count <= 8:
-        raise DataError("history_seasons_to_use must be 1–8.")
+    count = int(config.get("history_seasons_to_use", 8))
+    if not 1 <= count <= 10:
+        raise DataError("history_seasons_to_use must be 1–10.")
     start = int(season[:4])
     seasons = ([f"{y}-{str(y+1)[-2:]}" for y in range(start - 1, max(2015, start - count - 4), -1)]
                if automatic else config["historical_seasons"])
