@@ -1,4 +1,22 @@
-# FPL Advisor v3.1
+# FPL Advisor v3.2
+
+## New: anti-cheating similarity checks
+
+Open **Anti-cheating checks**, paste multiple entry IDs into **List A** and **List B**,
+choose your gameweek range and set a **0–100% similarity threshold**. The dashboard
+compares every A entry separately with every B entry and shows squad/XI overlap,
+captain agreement, average similarity, repeated matches, streaks and coverage.
+Open a pair's **Timeline** for its history graph, shared/differing players, inferred
+squad changes and public-pick links. A CSV download is included.
+
+You can apply new thresholds to loaded history without refetching. An optional
+repeated-week percentage makes the screening stricter. Missing weeks are marked
+as incomplete; identical IDs are skipped. Checks and entry lists stay local under
+`user/integrity/`. The code release includes no actual comparison results.
+
+High overlap does not establish cheating. This is a transparent comparison tool,
+not a probability-of-guilt model. See [INTEGRITY_CHECKS.md](INTEGRITY_CHECKS.md) for
+the exact formulas, coverage policy, Free Hit handling and current-season limits.
 
 ## New: YouTube, Reddit and qualitative evidence
 

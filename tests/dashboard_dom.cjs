@@ -11,7 +11,7 @@ async function main(){
   const check=(name,fn)=>{fn();passed++;console.log('PASS '+name);};
   try{
     await wait(()=>$('analysisPlayer').options.length>0,'dashboard assets and analytics');
-    check('seven tabs and loaded forecasts',()=>{assert.equal(d.querySelectorAll('nav button').length,7);assert.equal($('playersBody').rows.length,40);});
+    check('eight tabs and loaded forecasts',()=>{assert.equal(d.querySelectorAll('nav button').length,8);assert.equal($('playersBody').rows.length,40);});
     check('qualitative mode starts off and coverage is explicit',()=>{assert.equal($('forecastStatsBtn').getAttribute('aria-pressed'),'true');assert.equal($('qualCoverageBody').rows.length,2);assert.match($('qualCoverageBody').textContent,/unavailable/);});
     check('rival comparison is off initially',()=>assert.equal(d.querySelector('.rivalToggle').checked,false));
     $('entryId').value='999';await w.importTeam();
@@ -68,6 +68,21 @@ async function main(){
     $('qualImportSource').value='Fixture club';$('qualImportDate').value=new Date(Date.now()-3600000).toISOString().slice(0,16);$('qualImportUrl').value='https://www.mancity.com/news/test';$('qualImportText').value='Fixture player 2 will start for the next match.';await w.importEvidence();
     await wait(()=>$('qualImportStatus').textContent.startsWith('Saved'),'source text import');
     check('manual evidence import works through the HTTP API',()=>assert.match($('qualImportStatus').textContent,/Saved imported text/));
+    w.showTab('integrity');await wait(()=>$('integrityEnd').options.length>0,'public GW choices');
+    check('integrity offers only published gameweeks',()=>assert.equal($('integrityEnd').options.length,4));
+    $('integrityA').value='1,3,1';$('integrityB').value='2\n3';$('integrityStart').value='1';$('integrityEnd').value='3';await w.runIntegrity();
+    await wait(()=>$('integrityPairs').rows.length===3,'three independent A-by-B pairs');
+    check('bulk cross-list comparison skips duplicates and self pairs',()=>{assert.match($('integritySummary').textContent,/3 separate pairs/);assert.match($('integritySummary').textContent,/1 self-comparisons skipped/);});
+    w.syncIntegrityThreshold(100);await w.applyIntegrity();
+    check('100 percent threshold isolates the identical pair',()=>assert.match($('integritySummary').textContent,/1 meet the settings/));
+    $('integrityOnlyMatches').checked=true;w.renderIntegrity();
+    check('matching-pairs filter works',()=>assert.equal($('integrityPairs').rows.length,1));
+    await w.inspectIntegrityPair(1,2);
+    check('pair timeline provides history graph and public source links',()=>{assert.ok($('integrityDetail').querySelector('svg'));assert.equal($('integrityDetail').querySelectorAll('tbody tr').length,3);assert.ok($('integrityDetail').querySelector('a[href="https://fantasy.premierleague.com/entry/1/event/1/"]'));});
+    w.syncIntegrityThreshold(0);$('integrityStart').value='2';await w.applyIntegrity();
+    check('zero threshold and smaller period apply to loaded history',()=>{assert.match($('integritySummary').textContent,/3 meet the settings/);assert.match($('integritySummary').textContent,/GW2–3/);});
+    const integrityCsv=await fetch(base+'/integrity-results.csv');
+    check('similarity CSV exports applied metrics',()=>{assert.equal(integrityCsv.status,200);assert.equal(integrityCsv.headers.get('Content-Type'),'text/csv; charset=utf-8');});
     check('no uncaught JavaScript errors',()=>assert.deepEqual(errors,[]));
     if(process.env.FPL_DOM_OUTPUT)fs.writeFileSync(process.env.FPL_DOM_OUTPUT,dom.serialize());
     console.log(`${passed} HTTP/DOM smoke checks passed.`);

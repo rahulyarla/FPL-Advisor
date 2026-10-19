@@ -13,6 +13,7 @@ from .http import DataError
 from .pipeline import public_team, run, selection, state, refresh_qualitative, load_config
 from .analytics import player_analytics
 from .rivals import rivals_state, import_rival, edit_rival, refresh_rivals
+from .integrity import SimilarityJob, options as integrity_options
 
 
 class Job:
@@ -60,6 +61,7 @@ class Job:
 
 def make_handler(root, job, port):
     root = Path(root)
+    integrity = SimilarityJob(root)
 
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, fmt, *args):
@@ -88,7 +90,15 @@ def make_handler(root, job, port):
                     self.send(200, state(root))
                 elif path == "/api/status":
                     self.send(200, job.status())
-                elif path in ("/app.js", "/charts.js", "/dashboard_features.js", "/qualitative.js", "/style.css"):
+                elif path == "/api/integrity/options":
+                    self.send(200, integrity_options(root))
+                elif path == "/api/integrity/status":
+                    self.send(200, integrity.status())
+                elif path == "/api/integrity/result":
+                    self.send(200, integrity.report())
+                elif path == "/integrity-results.csv":
+                    self.send(200, integrity.csv(), "text/csv; charset=utf-8")
+                elif path in ("/app.js", "/charts.js", "/dashboard_features.js", "/qualitative.js", "/integrity.js", "/style.css"):
                     kind = "text/javascript; charset=utf-8" if path.endswith(".js") else "text/css; charset=utf-8"
                     self.send(200, (root / "fpl_advisor/static" / path[1:]).read_bytes(), kind)
                 elif path == "/api/rivals":
@@ -136,6 +146,14 @@ def make_handler(root, job, port):
                     self.send(200, public_team(root, payload.get("entry_id", "")))
                 elif self.path == "/api/select":
                     self.send(200, selection(root, payload))
+                elif self.path == "/api/integrity/start":
+                    self.send(202, integrity.start(payload))
+                elif self.path == "/api/integrity/cancel":
+                    self.send(200, integrity.cancel())
+                elif self.path == "/api/integrity/recalculate":
+                    self.send(200, integrity.recalculate(payload))
+                elif self.path == "/api/integrity/pair":
+                    self.send(200, integrity.pair(payload))
                 elif self.path == "/api/qualitative/refresh":
                     self.send(202, {"started": job.start(evidence_only=True)})
                 elif self.path == "/api/qualitative/sources":

@@ -1,4 +1,24 @@
-# Validation of v3.1
+# Validation of v3.2
+
+## Pairwise public-history checks
+
+Verified locally on 19 October 2026:
+
+- **104 Python contracts passed.** New cases cover bulk IDs, exact 15/11-player
+  denominators, independent A-by-B pairs, self/duplicate handling, inclusive 0/100%
+  thresholds, unrounded comparisons, adjustable periods, persistence requirements,
+  unknown captains, missing-week coverage and streak breaks, Free Hit/no-action
+  changes, deadline scope, private results, reanalysis and cancellation.
+- **38 HTTP/DOM checks passed.** Includes the existing forecasting/rival/evidence
+  flows plus bulk comparison, 100% and 0% thresholds, period adjustment, matching
+  filters, history charts, public-pick source links and CSV exports.
+- Official bootstrap and public GW6/GW7 pick responses were read successfully to
+  verify source shape. No real entry lists or similarity results are published.
+- The browser suite includes the complete two-list workflow, threshold filtering,
+  timeline rendering and mobile width/overflow checks. Release CI records the
+  desktop/mobile result.
+
+## Earlier qualitative extension
 
 ## Qualitative extension
 

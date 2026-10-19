@@ -22,6 +22,8 @@ from fpl_advisor.http import write_json, utc_now
 from fpl_advisor.selection import optimize
 from fpl_advisor.qualitative import evidence, apply_evidence
 from test_contracts import player_pool, record
+from test_integrity import FakeReader
+import fpl_advisor.integrity as integrity
 
 
 def main():
@@ -103,6 +105,7 @@ def main():
 
         server.public_team = fake_import
         pipeline.public_team = fake_import
+        integrity.PublicReader = FakeReader
         server.serve(root,port=args.port)
 
 

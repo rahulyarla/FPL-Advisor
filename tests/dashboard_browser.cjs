@@ -48,6 +48,19 @@ async function main(){
       assert.ok((await page.locator('#qualImportSource').boundingBox()).width>=200);count++;
       assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);count++;
       await page.screenshot({path:`test-artifacts/qualitative-${viewport.width}.png`,fullPage:true});
+      await page.getByRole('button',{name:'Anti-cheating checks',exact:true}).click();
+      await page.waitForFunction(()=>document.getElementById('integrityEnd').options.length>0);
+      await page.locator('#integrityA').fill('1,3,1');await page.locator('#integrityB').fill('2\n3');
+      await page.locator('#integrityStart').selectOption('1');await page.locator('#integrityEnd').selectOption('3');
+      await page.locator('#integrityRun').click();await page.waitForFunction(()=>!document.getElementById('integrityRun').disabled&&document.querySelectorAll('#integrityPairs tr').length===3);count++;
+      await page.locator('#integrityThresholdNumber').fill('100');await page.locator('#integrityThresholdNumber').press('Tab');await page.locator('#integrityApply').click();
+      await page.waitForFunction(()=>document.getElementById('integritySummary').textContent.includes('1 meet the settings'));count++;
+      await page.locator('#integrityOnlyMatches').check();assert.equal(await page.locator('#integrityPairs tr').count(),1);count++;
+      await page.getByRole('button',{name:'Timeline',exact:true}).click();await page.locator('#integrityDetail svg').waitFor();
+      assert.equal(await page.locator('#integrityDetail tbody tr').count(),3);count++;
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);count++;
+      assert.ok((await page.locator('#integrityA').boundingBox()).width>=200);count++;
+      await page.screenshot({path:`test-artifacts/integrity-${viewport.width}.png`,fullPage:true});
       assert.deepEqual(errors,[]);count++;
       console.log(`PASS browser viewport ${viewport.width}x${viewport.height}`);await page.close();
     }
