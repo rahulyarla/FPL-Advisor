@@ -9,7 +9,7 @@ Verified locally on 19 October 2026:
   thresholds, unrounded comparisons, adjustable periods, persistence requirements,
   unknown captains, missing-week coverage and streak breaks, Free Hit/no-action
   changes, deadline scope, private results, reanalysis and cancellation.
-- **38 HTTP/DOM checks passed.** Includes the existing forecasting/rival/evidence
+- **38 HTTP/DOM checks passed for the core release.** Includes the existing forecasting/rival/evidence
   flows plus bulk comparison, 100% and 0% thresholds, period adjustment, matching
   filters, history charts, public-pick source links and CSV exports.
 - Official bootstrap and public GW6/GW7 pick responses were read successfully to
@@ -17,6 +17,11 @@ Verified locally on 19 October 2026:
 - The browser suite includes the complete two-list workflow, threshold filtering,
   timeline rendering and mobile width/overflow checks. Release CI records the
   desktop/mobile result.
+
+[Release CI](https://github.com/rahulyarla/FPL-Advisor/actions/runs/39197142679)
+passed on Linux/Python 3.12 and Windows/Python 3.13, including 104 contracts,
+38 HTTP/DOM checks and the desktop/mobile browser suite. A follow-up adds the
+available-gameweek refresh control and a check that it preserves edited ID lists.
 
 ## Earlier qualitative extension
 

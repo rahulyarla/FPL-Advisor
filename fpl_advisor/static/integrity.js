@@ -1,5 +1,5 @@
 /* Public-history comparison: separate data, background job and exact metrics. */
-let INTEGRITY={ready:false}, INTEGRITY_OPTIONS=null, integrityTimer=null, integrityBusy=false, integrityOpen=false, integrityPage=0;
+let INTEGRITY={ready:false}, INTEGRITY_OPTIONS=null, integrityTimer=null, integrityBusy=false, integrityOpen=false, integrityPage=0, integrityOptionsAt=0;
 const INTEGRITY_PAGE_SIZE=100;
 function integrityError(message){$('integrityError').textContent=message;$('integrityError').classList.remove('hidden');}
 function integrityInputs(){
@@ -16,17 +16,20 @@ function putIntegritySettings(cfg){
   $('integrityStart').value=cfg.start_gw;$('integrityEnd').value=cfg.end_gw;$('integrityMetric').value=cfg.metric;
   syncIntegrityThreshold(cfg.threshold);$('integrityRecurrence').value=cfg.min_matching_week_percent||0;$('integrityApplyNote').textContent='';
 }
-async function openIntegrity(){
-  if(integrityOpen)return;
+async function openIntegrity(force=false){
+  const first=!integrityOpen,priorStart=$('integrityStart').value,priorEnd=$('integrityEnd').value;
+  if(integrityOpen&&!force&&Date.now()-integrityOptionsAt<60000)return;
   integrityOpen=true;$('integrityError').classList.add('hidden');
   const results=await Promise.allSettled([request('/api/integrity/options'),request('/api/integrity/result'),request('/api/integrity/status')]);
   if(results[0].status==='fulfilled'){
     INTEGRITY_OPTIONS=results[0].value;const o=INTEGRITY_OPTIONS;
+    integrityOptionsAt=Date.now();
     ['integrityStart','integrityEnd'].forEach(id=>$(id).innerHTML=o.events.map(e=>`<option value="${e.id}">GW${e.id}${e.finished?'':' · in progress'}</option>`).join(''));
     $('integrityStart').value=Math.max(1,o.latest_gw-4);$('integrityEnd').value=o.latest_gw;
+    if(!first){if([...$('integrityStart').options].some(e=>e.value===priorStart))$('integrityStart').value=priorStart;if([...$('integrityEnd').options].some(e=>e.value===priorEnd))$('integrityEnd').value=priorEnd;}
     $('integritySeason').textContent=`${o.season} · published deadlines through GW${o.latest_gw}`;
   }else{integrityOpen=false;integrityError('Could not load the official published gameweeks. '+results[0].reason.message);}
-  if(results[1].status==='fulfilled'&&results[1].value.ready){INTEGRITY=results[1].value;if(INTEGRITY_OPTIONS?.season===INTEGRITY.season)putIntegritySettings(INTEGRITY.settings);renderIntegrity();}
+  if(results[1].status==='fulfilled'&&results[1].value.ready){INTEGRITY=results[1].value;if(first&&INTEGRITY_OPTIONS?.season===INTEGRITY.season)putIntegritySettings(INTEGRITY.settings);renderIntegrity();}
   if(results[2].status==='fulfilled'&&results[2].value.running){integrityBusy=true;pollIntegrity();}
 }
 async function runIntegrity(){

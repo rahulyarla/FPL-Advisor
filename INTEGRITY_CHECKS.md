@@ -24,6 +24,8 @@ contacting FPL again. It also supports a smaller period within the loaded range.
 A larger period or changed ID lists requires **Run checks**. **Cancel** stops new
 reads and retains the previous completed report. Reads already in flight can take
 up to the 20-second request timeout to stop.
+**Refresh gameweeks** updates the available deadline range while preserving your
+edited lists. Reopening the tab also updates metadata once its one-minute cache expires.
 
 The interface supports many entries with background loading, three network workers,
 deduplicated reads and 100-row table pages. A single run can produce up to 10,000

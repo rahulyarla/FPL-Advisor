@@ -76,7 +76,7 @@
   </ul><p class="muted small">Forecasts describe expected points. Make your final team changes in FPL.</p></div>
 </section>
 <section class="tab" id="tab-integrity">
-  <div class="panel"><div class="paneltitle"><div><div class="eyebrow" id="integritySeason">Public deadline history</div><h2>Anti-cheating checks</h2><p class="muted small">Compare each entry in List A independently with every entry in List B, over your chosen gameweeks.</p></div></div>
+  <div class="panel"><div class="paneltitle"><div><div class="eyebrow" id="integritySeason">Public deadline history</div><h2>Anti-cheating checks</h2><p class="muted small">Compare each entry in List A independently with every entry in List B, over your chosen gameweeks.</p></div><button class="secondary" onclick="openIntegrity(true)">Refresh gameweeks</button></div>
     <div class="notice">Similarity can reflect template picks, shared advice or chance. These checks identify overlap for review; they do not establish cheating.</div>
     <div class="notice error hidden" id="integrityError" role="alert"></div>
     <div class="two integrity-lists"><div><label for="integrityA">List A · entries to check</label><textarea id="integrityA" rows="6" placeholder="Entry IDs or official FPL team links&#10;One per line, or separated by commas" onchange="integritySettingsChanged()"></textarea></div><div><label for="integrityB">List B · comparison entries</label><textarea id="integrityB" rows="6" placeholder="Enter another list of IDs&#10;Each A entry is compared with each B entry" onchange="integritySettingsChanged()"></textarea></div></div>

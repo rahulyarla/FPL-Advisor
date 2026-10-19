@@ -83,6 +83,8 @@ async function main(){
     check('zero threshold and smaller period apply to loaded history',()=>{assert.match($('integritySummary').textContent,/3 meet the settings/);assert.match($('integritySummary').textContent,/GW2–3/);});
     const integrityCsv=await fetch(base+'/integrity-results.csv');
     check('similarity CSV exports applied metrics',()=>{assert.equal(integrityCsv.status,200);assert.equal(integrityCsv.headers.get('Content-Type'),'text/csv; charset=utf-8');});
+    $('integrityA').value='3,1';await w.openIntegrity(true);
+    check('refreshing available GWs preserves edited ID lists',()=>assert.equal($('integrityA').value,'3,1'));
     check('no uncaught JavaScript errors',()=>assert.deepEqual(errors,[]));
     if(process.env.FPL_DOM_OUTPUT)fs.writeFileSync(process.env.FPL_DOM_OUTPUT,dom.serialize());
     console.log(`${passed} HTTP/DOM smoke checks passed.`);
