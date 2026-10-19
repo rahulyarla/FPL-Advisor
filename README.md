@@ -1,4 +1,22 @@
-# FPL Advisor v3.2
+# FPL Advisor v3.3
+
+## New: visual team-similarity results
+
+**Anti-cheating checks** now opens with a clickable **similarity matrix**. List A
+forms the rows and List B the columns; every cell shows an overlap percentage on
+a fixed 0–100% colour scale. Switch between the period average and latest GW,
+sort by similarity, search either list, or focus on one checked team. Large lists
+have separate row/column pages with sticky team labels and mobile scrolling.
+
+Summary cards show counts, coverage gaps and the highest period average. Horizontal
+bars highlight the closest visible reference for each checked entry. Select a cell
+or bar to see a fixed-scale gameweek trend, a week-by-week heat strip and squad/XI/
+captain breakdown bars. The detailed table, player histories and CSV remain available.
+
+This is a matrix of **overlap percentages**, not Pearson correlation. Missing data,
+partial coverage and skipped self-comparisons have distinct labels. Cell outlines
+always refer to the applied **period** settings, including in the latest-GW view.
+All visuals use the existing measurements; the scoring formulas are unchanged.
 
 ## New: anti-cheating similarity checks
 

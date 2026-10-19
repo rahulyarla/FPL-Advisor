@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const {chromium}=require(process.env.FPL_PLAYWRIGHT_MODULE||'playwright');
 async function main(){
-  const browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+  const browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage'],...(process.env.FPL_CHROMIUM_EXECUTABLE?{executablePath:process.env.FPL_CHROMIUM_EXECUTABLE}:{})});
   const base=process.env.FPL_TEST_URL||'http://127.0.0.1:8877';let count=0;
   try{
     for(const viewport of [{width:1440,height:1000},{width:390,height:844}]){
@@ -53,14 +53,42 @@ async function main(){
       await page.locator('#integrityA').fill('1,3,1');await page.locator('#integrityB').fill('2\n3');
       await page.locator('#integrityStart').selectOption('1');await page.locator('#integrityEnd').selectOption('3');
       await page.locator('#integrityRun').click();await page.waitForFunction(()=>!document.getElementById('integrityRun').disabled&&document.querySelectorAll('#integrityPairs tr').length===3);count++;
+      assert.equal(await page.locator('#integrityMatrixButton').getAttribute('aria-pressed'),'true');assert.equal(await page.locator('#integrityMatrix .integrity-cell').count(),3);count++;
       await page.locator('#integrityThresholdNumber').fill('100');await page.locator('#integrityThresholdNumber').press('Tab');await page.locator('#integrityApply').click();
       await page.waitForFunction(()=>document.getElementById('integritySummary').textContent.includes('1 meet the settings'));count++;
       await page.locator('#integrityOnlyMatches').check();assert.equal(await page.locator('#integrityPairs tr').count(),1);count++;
-      await page.getByRole('button',{name:'Timeline',exact:true}).click();await page.locator('#integrityDetail svg').waitFor();
+      assert.equal(await page.locator('#integrityMatrix .is-match').count(),1);count++;
+      await page.locator('#integrityMatrix .integrity-cell').focus();await page.keyboard.press('Enter');await page.locator('#integrityDetail svg').waitFor();
+      assert.equal(await page.locator('#integrityMatrix .integrity-cell').getAttribute('aria-pressed'),'true');count++;
       assert.equal(await page.locator('#integrityDetail tbody tr').count(),3);count++;
+      assert.equal(await page.locator('#integrityDetail .integrity-week').count(),3);assert.equal(await page.locator('#integrityDetail .integrity-breakdown-row').count(),3);count++;
       assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);count++;
       assert.ok((await page.locator('#integrityA').boundingBox()).width>=200);count++;
       await page.screenshot({path:`test-artifacts/integrity-${viewport.width}.png`,fullPage:true});
+      await page.locator('#integrityTableButton').click();assert.equal(await page.locator('#integrityTableView').isVisible(),true);count++;
+      await page.getByRole('button',{name:'Timeline',exact:true}).click();await page.locator('#integrityDetail svg').waitFor();
+      await page.locator('#integrityMatrixButton').click();await page.locator('#integrityOnlyMatches').uncheck();
+      // A bounded, purely synthetic 13 × 17 report exercises real scroll layout.
+      await page.evaluate(report=>{INTEGRITY=report;clearIntegrityDetail();document.getElementById('integrityFocus').value='';integrityFilterChanged();},require('./integrity_visual_fixture.cjs')());
+      assert.equal(await page.locator('#integrityMatrix .integrity-cell').count(),96);count++;
+      assert.equal(await page.locator('#integrityMatrix [data-pair="101:202"]').getAttribute('aria-label').then(s=>s.includes('2 of 3')),true);count++;
+      assert.match(await page.locator('#integrityMatrix [data-pair="101:203"]').textContent(),/No data/);count++;
+      assert.equal(await page.locator('#integrityResults img').count(),0);count++;
+      const scroll=page.locator('#integrityMatrix');
+      assert.equal(await scroll.evaluate(n=>n.scrollWidth>n.clientWidth),viewport.width<850);count++;
+      await scroll.evaluate(n=>{n.scrollLeft=200;n.scrollTop=160;});
+      const fixed=await scroll.evaluate(n=>{const r=n.getBoundingClientRect(),th=n.querySelector('tbody th').getBoundingClientRect(),head=n.querySelector('thead th').getBoundingClientRect();return Math.abs(th.left-r.left)<3&&Math.abs(head.top-r.top)<3;});
+      assert.equal(fixed,true);count++;
+      await scroll.evaluate(n=>{n.scrollLeft=0;n.scrollTop=0;});
+      await page.locator('#integrityResults').scrollIntoViewIfNeeded();
+      await page.screenshot({path:`test-artifacts/integrity-matrix-${viewport.width}.png`,fullPage:true});
+      await page.locator('#integrityColNext').click();assert.match(await page.locator('#integrityColInfo').textContent(),/B 9–16 of 17/);count++;
+      await page.locator('#integrityColNext').click();await page.locator('#integrityRowNext').click();
+      assert.equal(await page.locator('#integrityMatrix .integrity-cell').count(),1);assert.equal(await page.locator('#integrityRowNext').isDisabled(),true);count++;
+      await page.locator('#integrityFocus').selectOption('101');await page.locator('#integrityDisplay').selectOption('latest');
+      assert.match(await page.locator('#integrityMatrix [data-pair="101:201"]').textContent(),/100.00%/);assert.match(await page.locator('#integrityMatrix [data-pair="101:202"]').textContent(),/No data/);count++;
+      await page.locator('#integritySearch').fill('no-such-team');assert.equal(await page.locator('#integrityMatrix table').count(),0);count++;
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);count++;
       assert.deepEqual(errors,[]);count++;
       console.log(`PASS browser viewport ${viewport.width}x${viewport.height}`);await page.close();
     }

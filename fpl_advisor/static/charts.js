@@ -1,11 +1,13 @@
 /* Small, accessible SVG charts. No third-party scripts or network dependencies. */
-function svgChart({labels=[], series=[], title='Player chart', unit='', height=230}) {
+function svgChart({labels=[], series=[], title='Player chart', unit='', height=230, domain=null}) {
   const clean=series.filter(s=>s.values.some(v=>v!=null&&Number.isFinite(Number(v))));
   if(!labels.length||!clean.length) return '<p class="empty">No recorded observations for this view yet.</p>';
   const W=540,H=height,L=48,R=15,T=20,B=44,plotW=W-L-R,plotH=H-T-B;
   const numbers=clean.flatMap(s=>s.values.filter(v=>v!=null&&Number.isFinite(Number(v))).map(Number));
   let low=numbers.reduce((a,b)=>Math.min(a,b),0),high=numbers.reduce((a,b)=>Math.max(a,b),1);
-  const pad=(high-low)*.12; if(low<0) low-=pad; high+=pad;
+  if(Array.isArray(domain)&&domain.length===2&&domain.every(Number.isFinite)&&domain[1]>domain[0]){
+    [low,high]=domain;
+  }else{const pad=(high-low)*.12; if(low<0) low-=pad; high+=pad;}
   const x=i=>L+(labels.length===1?plotW/2:i*plotW/(labels.length-1));
   const y=v=>T+(high-v)*plotH/(high-low),pieces=[];
   for(let tick=0;tick<5;tick++) {

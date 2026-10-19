@@ -17,7 +17,45 @@ overlap. Use the measurements as review prompts alongside other evidence.
    setting requires a minimum percentage of weeks to individually reach that threshold.
 6. Click **Run checks**. Every A entry is compared independently with every B
    entry. Repeated IDs within a list are removed; self-comparisons are skipped.
-7. Filter/search the pair table, open **Timeline** for any pair, or download the CSV.
+7. Read the **Similarity matrix**, select a cell for its history, switch to the
+   **Detailed table**, or download the CSV.
+
+### Read the visual results
+
+- **Similarity matrix:** List A is on the rows and List B on the columns. Each
+  cell shows the chosen overlap measure, rounded to two decimals. A fixed sequential
+  0–100% scale makes the same score the same colour across teams and filtered views.
+  This is an overlap heatmap, not a Pearson correlation matrix or a cheating probability.
+- **Outlined cells** meet all applied period settings, including the repeated-week
+  requirement and complete coverage. The check mark provides a non-colour cue.
+  **Partial history** is explicitly marked; **No data**, **Self / Skipped**, and
+  filtered-out intersections are separate states, never substituted with 0%.
+- **Period average / Latest gameweek** changes the values shown in the matrix and
+  closest-reference bars. The chosen metric and GW range are printed above the grid.
+  The latest value always means the last selected GW, even when that observation is
+  missing. Outlines and the matching-pairs filter still use the full period rules.
+- **Search**, **List A entry**, and **Only pairs meeting the period settings** filter
+  the matrix, detailed table, overview cards and closest-reference bars together.
+  The overview's highest average is the largest available period average in that view;
+  partial coverage is labeled. The original period summary still describes all loaded
+  pairs. The CSV exports the full applied report, independently of display filters.
+- **Closest reference for each checked entry:** one horizontal bar per A entry shows
+  its highest-scoring visible B entry. The chart shows the ten highest of these matches,
+  not a mean across references. Focus on a particular A entry to inspect its best match.
+  Bars use a fixed 0–100% scale. A dashed marker indicates the numeric threshold;
+  coverage and repeated-week rules still decide whether period settings are met.
+- **Selected pair:** click a matrix cell or bar, or use the table's **Timeline**.
+  Cards show the chosen period average, latest value, coverage and longest streak.
+  The line chart uses a fixed 0–100% axis and leaves gaps for unavailable observations.
+  A heat strip labels every selected GW. Breakdown bars show squad overlap, XI overlap
+  and captain agreement, each averaged over its own available observations. Expand
+  **Player-by-player history and source links** for underlying players and public picks.
+
+The matrix renders up to **12 A entries × 8 B entries** per page. Separate A/B page
+controls cover all loaded entries without fetching more FPL data. Team labels stick
+while the grid scrolls, and entry IDs remain visible when long names are shortened.
+Cells support keyboard focus and activation; full names, IDs, coverage and values
+are included in accessible labels. The detailed table retains its 100-row pages.
 
 **Apply settings to loaded history** recalculates thresholds and metrics without
 contacting FPL again. It also supports a smaller period within the loaded range.
